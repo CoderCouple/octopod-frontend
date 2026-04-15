@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   BarChart3,
   BriefcaseBusiness,
@@ -53,11 +54,29 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="!p-1.5">
-              <a href="/dashboard">
-                <div className="flex size-6 items-center justify-center rounded-md bg-primary text-sm font-bold text-white">
-                  O
-                </div>
-                <span className="text-base font-semibold">Octopod</span>
+              <a href="/dashboard" className="flex items-center gap-2">
+                <Image
+                  src="/logo_svg/octopus_happy_light.svg"
+                  alt="Octopod"
+                  width={24}
+                  height={24}
+                  className="block dark:hidden"
+                />
+                <Image
+                  src="/logo_svg/octopus_happy_dark.svg"
+                  alt="Octopod"
+                  width={24}
+                  height={24}
+                  className="hidden dark:block"
+                />
+                <span className="text-base font-semibold">
+                  <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text font-extrabold text-transparent">
+                    Octo
+                  </span>
+                  <span className="text-stone-700 dark:text-stone-300">
+                    pod
+                  </span>
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -1,7 +1,3 @@
-"use client";
-
-// import { useRouter } from "next/navigation";
-// import { useEffect } from "react";
 import { BreadcrumbHeader } from "@/components/breadcrumb-header";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { ModeToggle } from "@/components/theme-mode-toggle";
@@ -12,6 +8,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
+// Auth guard — uncomment when enabling login
+// "use client";
+// import { useRouter } from "next/navigation";
+// import { useEffect } from "react";
 // import { useAuth } from "@/hooks/use-auth";
 
 export default function DashboardLayout({
