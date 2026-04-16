@@ -706,8 +706,9 @@ export const SearchDemo = () => {
               onProgress={handleProgress}
             />
           </div>
-          <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-200 sm:h-11 sm:w-11">
-            <IconArrowRight className="h-5 w-5" />
+          <button className="flex shrink-0 items-center gap-1.5 rounded-full bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-500 sm:px-6 sm:py-3 sm:text-base">
+            Get Started
+            <IconArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
 

@@ -1,13 +1,9 @@
 "use client";
 
-import Link from "next/link";
-
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import Balancer from "react-wrap-balancer";
 
 import { SearchDemo } from "@/components/search-demo";
-import { Button } from "@/components/ui/button";
 
 export const Hero = () => {
   return (
@@ -56,31 +52,6 @@ export const Hero = () => {
           their profiles and ranks them so you don&apos;t have to.
         </Balancer>
       </motion.p>
-      <motion.div
-        initial={{
-          y: 80,
-          opacity: 0,
-        }}
-        animate={{
-          y: 0,
-          opacity: 1,
-        }}
-        transition={{
-          ease: "easeOut",
-          duration: 0.5,
-          delay: 0.4,
-        }}
-        className="relative z-10 mt-6 flex items-center justify-center gap-4"
-      >
-        <Button className="rounded-full">Get Started Free</Button>
-        <Link
-          href="/contact"
-          className="group flex items-center space-x-2 text-sm font-medium text-neutral-800 transition-colors hover:text-black dark:text-neutral-200 dark:hover:text-white"
-        >
-          <span>Book a Demo</span>
-          <ArrowRight className="h-3 w-3 stroke-[1px] transition-transform duration-200 group-hover:translate-x-1" />
-        </Link>
-      </motion.div>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
