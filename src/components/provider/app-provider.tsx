@@ -13,7 +13,7 @@ export default function AppProvider({
     <AuthProvider>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
+        defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
       >
