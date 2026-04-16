@@ -21,7 +21,7 @@ export const Hero = () => {
           ease: "easeOut",
           duration: 0.5,
         }}
-        className="relative z-10 mx-auto mt-12 max-w-6xl text-center text-4xl font-semibold md:mt-16 md:text-5xl lg:text-8xl"
+        className="relative z-10 mx-auto mt-4 max-w-6xl text-center text-4xl font-semibold md:mt-6 md:text-5xl lg:text-8xl"
       >
         <Balancer>
           Top AI talent{" "}
@@ -56,7 +56,7 @@ export const Hero = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ ease: "easeOut", duration: 0.6, delay: 0.6 }}
-        className="relative mt-12 w-full md:mt-16"
+        className="relative mt-3 w-full md:mt-4"
       >
         <SearchDemo />
       </motion.div>
