@@ -39,6 +39,9 @@ function Logo({
           Octo
         </span>
         <span className="text-stone-700 dark:text-stone-300">pod</span>
+        <span className="ml-1 bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+          AI
+        </span>
       </div>
     </Link>
   );

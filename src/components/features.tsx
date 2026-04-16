@@ -13,41 +13,41 @@ import { SkeletonThree } from "./skeletons/third";
 export const Features = () => {
   const features = [
     {
-      title: "Candidate sourcing at scale",
+      title: "Multi-source profile merging",
       description:
-        "Source top talent from multiple channels simultaneously. Our AI scans millions of profiles to find the perfect match for your roles.",
+        "Pull candidate data from GitHub, LinkedIn, and Hugging Face into one unified view. No more switching between tabs.",
       skeleton: <SkeletonOne />,
       className:
         "col-span-1 md:col-span-4 border-b border-r dark:border-neutral-800",
     },
     {
-      title: "Smart candidate engagement",
+      title: "AI-powered candidate ranking",
       description:
-        "Engage candidates with personalized outreach powered by AI. Automate follow-ups and track every interaction in one place.",
+        "Automatically score and rank candidates based on real contributions, not just keywords on a resume.",
       skeleton: <SkeletonTwo />,
       className: "border-b col-span-1 md:col-span-2 dark:border-neutral-800",
     },
     {
-      title: "Configurable hiring pipelines",
+      title: "Semantic search",
       description:
-        "Customize your hiring pipeline stages, scoring criteria, and team permissions to match your unique workflow.",
+        "Find candidates by describing what you need in plain English. No boolean strings, no filters — just ask.",
       skeleton: <SkeletonThree />,
       className: "col-span-1 md:col-span-3 border-r dark:border-neutral-800",
     },
     {
-      title: "Global talent analytics",
+      title: "Real-time insights",
       description:
-        "Gain deep insights into talent markets worldwide. Understand compensation trends, skill availability, and hiring competition.",
+        "Track your hiring pipeline, source coverage, and talent market trends with a live analytics dashboard.",
       skeleton: <SkeletonFour />,
       className: "col-span-1 md:col-span-3",
     },
   ];
   return (
     <div className="relative z-20 py-10 md:py-40">
-      <Heading as="h2">Packed with powerful features</Heading>
+      <Heading as="h2">Built for how you actually hire</Heading>
       <Subheading className="text-center text-neutral-600 dark:text-neutral-300">
-        From candidate sourcing to offer management, Octopod has everything you
-        need to build world-class teams.
+        Every feature is designed around one goal: find the right engineer,
+        faster.
       </Subheading>
 
       <div className="relative">

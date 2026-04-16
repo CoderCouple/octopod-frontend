@@ -1,132 +1,79 @@
 "use client";
 
-import { useId } from "react";
+import { useMemo } from "react";
 
-import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
+/** Deterministic hash so server & client render the same grid */
+function rand(i: number, seed: number): number {
+  let h = ((i + 1) * 2654435761 + seed) | 0;
+  h = (((h >> 16) ^ h) * 0x45d9f3b) | 0;
+  return (((h >> 16) ^ h) >>> 0) / 4294967295;
+}
 
-import { cn } from "@/lib/utils";
+const CELL = 16; // px – square cell size
+const GAP = 3; // px
+// Enough cells to tile a large viewport (overflow hidden handles excess)
+const TOTAL = 8000;
+
+const COLORS_LIGHT = [
+  "rgb(220 252 231 / 0.6)",
+  "rgb(187 247 208 / 0.7)",
+  "rgb(134 239 172 / 0.6)",
+  "rgb(74 222 128 / 0.6)",
+];
+
+const COLORS_DARK = [
+  "rgb(5 46 22 / 0.25)",
+  "rgb(20 83 45 / 0.3)",
+  "rgb(21 128 61 / 0.25)",
+  "rgb(34 197 94 / 0.3)",
+];
 
 export const Background = () => {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
-      <div className="pointer-events-none absolute inset-0 h-full w-full bg-white [mask-image:radial-gradient(ellipse_at_center,transparent,white)] dark:bg-black" />
-      {Array.from({ length: 6 }).map((_, index) => (
-        <div className="flex" key={`grid-column${index}`}>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <GridBlock key={`grid-row${index}`} />
-          ))}
-        </div>
-      ))}
-    </div>
+  const cells = useMemo(
+    () =>
+      Array.from({ length: TOTAL }, (_, i) => {
+        const r = rand(i, 42);
+        const level = r < 0.35 ? 0 : r < 0.6 ? 1 : r < 0.82 ? 2 : 3;
+        const pulses = rand(i, 137) < 0.08;
+        const delay = +(rand(i, 251) * 12).toFixed(1);
+        const duration = +(3 + rand(i, 389) * 5).toFixed(1);
+        return { level, pulses, delay, duration };
+      }),
+    [],
   );
-};
 
-const GridBlock = () => {
   return (
-    <div className="flex w-60 flex-col items-start justify-center">
-      <div className="flex items-center justify-center">
-        <Dot />
-        <SVG />
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      {/* Center fade — hides grid behind content, visible on left/right edges */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-white [mask-image:linear-gradient(to_right,transparent_0%,transparent_10%,white_25%,white_75%,transparent_90%,transparent_100%)] dark:bg-black" />
+
+      {/* Activity grid — fixed-size square cells, auto-wrapped */}
+      <div
+        className="absolute inset-0 grid p-1"
+        style={{
+          gridTemplateColumns: `repeat(auto-fill, ${CELL}px)`,
+          gridAutoRows: `${CELL}px`,
+          gap: `${GAP}px`,
+        }}
+      >
+        {cells.map(({ level, pulses, delay, duration }, i) => (
+          <div
+            key={i}
+            className="rounded-[2px] bg-[--cell-bg] dark:bg-[--cell-bg-dark]"
+            style={
+              {
+                "--cell-bg": COLORS_LIGHT[level],
+                "--cell-bg-dark": COLORS_DARK[level],
+                ...(pulses
+                  ? {
+                      animation: `grid-pulse ${duration}s ease-in-out ${delay}s infinite`,
+                    }
+                  : {}),
+              } as React.CSSProperties
+            }
+          />
+        ))}
       </div>
-      <SVGVertical className="ml-3" />
     </div>
-  );
-};
-
-const Dot = () => {
-  return (
-    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
-      <div className="h-2 w-2 rounded-full bg-neutral-300 dark:bg-neutral-500" />
-    </div>
-  );
-};
-
-const SVGVertical = ({ className }: { className?: string }) => {
-  const { theme } = useTheme();
-  const color = theme === "dark" ? "#ffffff" : "#d4d4d4";
-
-  const width = 1;
-  const height = 140;
-
-  const id = useId();
-  return (
-    <motion.svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn("text-neutral-100 dark:text-neutral-800", className)}
-    >
-      <path d="M0.5 0.5V479" stroke="currentColor" strokeWidth={2} />
-      <motion.path
-        d="M0.5 0.5V479"
-        stroke={`url(#gradient-${id})`}
-        strokeWidth={2}
-      />
-
-      <defs>
-        <motion.linearGradient
-          id={`gradient-${id}`}
-          initial={{ x1: 2, y1: -200, x2: 2, y2: -100 }}
-          animate={{ x1: 2, y1: 400, x2: 2, y2: 600 }}
-          transition={{
-            repeat: Infinity,
-            duration: Math.random() * 2 + 1,
-            delay: Math.floor(Math.random() * 6) + 5,
-          }}
-          gradientUnits="userSpaceOnUse"
-        >
-          <motion.stop offset="0%" stopColor="transparent" />
-          <motion.stop offset="50%" stopColor={color} />
-          <motion.stop offset="100%" stopColor="transparent" />
-        </motion.linearGradient>
-      </defs>
-    </motion.svg>
-  );
-};
-
-const SVG = ({ className }: { className?: string }) => {
-  const { theme } = useTheme();
-  const color = theme === "dark" ? "#ffffff" : "#d4d4d4";
-  const width = 300;
-  const height = 1;
-
-  const id = useId();
-  return (
-    <motion.svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn("text-neutral-100 dark:text-neutral-800", className)}
-    >
-      <path d="M0.5 0.5H479" stroke="currentColor" />
-      <motion.path
-        d="M0.5 0.5H479"
-        stroke={`url(#gradient-${id})`}
-        strokeWidth={1}
-      />
-
-      <defs>
-        <motion.linearGradient
-          id={`gradient-${id}`}
-          initial={{ x1: -200, y1: 0, x2: -100, y2: 0 }}
-          animate={{ x1: 400, y1: 0, x2: 600, y2: 0 }}
-          transition={{
-            repeat: Infinity,
-            duration: Math.random() * 2 + 1,
-            delay: Math.floor(Math.random() * 6) + 5,
-          }}
-          gradientUnits="userSpaceOnUse"
-        >
-          <motion.stop offset="0%" stopColor="transparent" />
-          <motion.stop offset="50%" stopColor={color} />
-          <motion.stop offset="100%" stopColor="transparent" />
-        </motion.linearGradient>
-      </defs>
-    </motion.svg>
   );
 };

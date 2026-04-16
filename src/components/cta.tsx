@@ -26,17 +26,17 @@ export const CTA = () => {
 
             <div className="relative px-6 pb-14 pt-20 sm:px-10 sm:pb-20 lg:px-[4.5rem]">
               <h2 className="mx-auto text-balance text-center text-3xl font-semibold tracking-[-0.015em] text-white md:text-5xl">
-                Ready to transform your hiring?
+                Your next great hire is already on GitHub.
               </h2>
               <p className="mx-auto mt-4 max-w-[26rem] text-center text-base/6 text-neutral-200">
                 <Balancer>
-                  Start discovering top talent today. Get instant access to
-                  Octopod and build your dream team.
+                  Stop searching. Start finding. Get instant access to Octopod
+                  and discover top engineering talent today.
                 </Balancer>
               </p>
 
               <div className="relative z-10 mx-auto mt-6 flex justify-center">
-                <Button>Get Started</Button>
+                <Button>Get Started Free</Button>
               </div>
             </div>
           </div>

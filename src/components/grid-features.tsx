@@ -1,12 +1,12 @@
 import {
   IconAdjustmentsBolt,
-  IconCloud,
-  IconCurrencyDollar,
-  IconEaseInOut,
-  IconHeart,
-  IconHelp,
-  IconRouteAltLeft,
-  IconTerminal2,
+  IconBrain,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconSearch,
+  IconShieldCheck,
+  IconTimeline,
+  IconUsers,
 } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
@@ -14,51 +14,52 @@ import { cn } from "@/lib/utils";
 export const GridFeatures = () => {
   const features = [
     {
-      title: "Built for recruiters",
+      title: "GitHub deep analysis",
       description:
-        "Built for talent teams, recruiters, and hiring managers who demand the best.",
-      icon: <IconTerminal2 />,
+        "Repos, stars, commits, and language proficiency — understand what engineers actually build.",
+      icon: <IconBrandGithub />,
     },
     {
-      title: "Effortless onboarding",
+      title: "LinkedIn integration",
       description:
-        "Get your team up and running in minutes. No complex setup or training required.",
-      icon: <IconEaseInOut />,
+        "Experience, education, and endorsements pulled directly into a unified candidate view.",
+      icon: <IconBrandLinkedin />,
     },
     {
-      title: "Transparent pricing",
+      title: "HuggingFace insights",
       description:
-        "Simple, predictable pricing. No hidden fees, no per-seat charges, no surprises.",
-      icon: <IconCurrencyDollar />,
+        "ML models, datasets, and spaces — find AI/ML talent based on real published work.",
+      icon: <IconBrain />,
     },
     {
-      title: "99.9% uptime guarantee",
-      description: "Enterprise-grade reliability so your hiring never stops.",
-      icon: <IconCloud />,
-    },
-    {
-      title: "Multi-team collaboration",
+      title: "Smart ranking",
       description:
-        "Collaborate across departments with role-based access and shared candidate pools.",
-      icon: <IconRouteAltLeft />,
-    },
-    {
-      title: "24/7 customer support",
-      description:
-        "Our team is always available to help you get the most out of Octopod.",
-      icon: <IconHelp />,
-    },
-    {
-      title: "Data-driven decisions",
-      description:
-        "Make smarter hiring decisions with AI-powered analytics and insights.",
+        "Weighted scoring across all sources so the best candidates rise to the top automatically.",
       icon: <IconAdjustmentsBolt />,
     },
     {
-      title: "Candidate experience",
+      title: "Semantic search",
       description:
-        "Deliver a world-class candidate experience that reflects your employer brand.",
-      icon: <IconHeart />,
+        "Describe your ideal candidate in plain English. Octopod finds them instantly.",
+      icon: <IconSearch />,
+    },
+    {
+      title: "Bias reduction",
+      description:
+        "Data-driven decisions based on real contributions, not resumes or gut feelings.",
+      icon: <IconShieldCheck />,
+    },
+    {
+      title: "Pipeline management",
+      description:
+        "Track candidates through every hiring stage with a clear, visual pipeline.",
+      icon: <IconTimeline />,
+    },
+    {
+      title: "Team collaboration",
+      description:
+        "Share profiles, scorecards, and notes with your team — stay aligned on every hire.",
+      icon: <IconUsers />,
     },
   ];
   return (
