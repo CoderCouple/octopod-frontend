@@ -48,7 +48,7 @@ export const Hero = () => {
         className="relative z-10 mx-auto mt-5 max-w-3xl text-center text-base text-muted-foreground text-neutral-800 dark:text-white/80 md:text-xl"
       >
         <Balancer>
-          Octopod finds them on GitHub, LinkedIn, and Hugging Face — then merges
+          Octopod AI finds them on GitHub and Hugging Face — then merges
           their profiles and ranks them so you don&apos;t have to.
         </Balancer>
       </motion.p>
