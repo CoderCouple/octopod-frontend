@@ -31,7 +31,7 @@ export const CTA = () => {
               <p className="mx-auto mt-4 max-w-[26rem] text-center text-base/6 text-neutral-200">
                 <Balancer>
                   Stop searching. Start finding. Get instant access to Octopod
-                  and discover top engineering talent today.
+                  AI and discover top engineering talent today.
                 </Balancer>
               </p>
 

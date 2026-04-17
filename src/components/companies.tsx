@@ -323,7 +323,7 @@ function OctopusEngine({ active }: { active: boolean }) {
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo_svg/octopus_waiting_light_color.svg"
+        src="/logo_svg/octopus_waiting_dark_color.svg"
         alt="Octopod"
         className="relative z-10 hidden h-28 w-28 dark:block xl:h-36 xl:w-36"
       />
@@ -346,18 +346,20 @@ function OctopusEngine({ active }: { active: boolean }) {
           </motion.div>
         ))}
 
-      {/* Label */}
-      <motion.span
-        animate={
-          active
-            ? { opacity: [0.5, 1, 0.5] }
-            : { opacity: 0 }
-        }
-        transition={{ duration: 2, repeat: active ? Infinity : 0 }}
-        className="absolute -bottom-6 whitespace-nowrap text-[10px] font-bold uppercase tracking-widest text-green-600 dark:text-green-400"
+      {/* Label — styled like logo */}
+      <motion.div
+        animate={active ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        className="absolute -top-8 whitespace-nowrap text-lg font-extrabold xl:-top-10 xl:text-2xl"
       >
-        Octopod
-      </motion.span>
+        <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+          Octo
+        </span>
+        <span className="text-neutral-700 dark:text-neutral-300">pod</span>
+        <span className="ml-0.5 bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+          AI
+        </span>
+      </motion.div>
     </motion.div>
   );
 }

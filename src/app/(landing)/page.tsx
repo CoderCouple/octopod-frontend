@@ -1,14 +1,14 @@
 import { Background } from "@/components/background";
 import { Companies } from "@/components/companies";
-import { Comparison } from "@/components/comparison";
 import { Container } from "@/components/container";
 import { CTA } from "@/components/cta";
-import { Features } from "@/components/features";
-import { GridFeatures } from "@/components/grid-features";
+
 import { Hero } from "@/components/hero";
+import { Leaderboard } from "@/components/leaderboard";
+import { OrgChart } from "@/components/org-chart";
 import { ProfilePreview } from "@/components/profile-preview";
-import { StatsBanner } from "@/components/stats-banner";
-import { Testimonials } from "@/components/testimonials";
+import { StatsShowcase } from "@/components/stats-showcase";
+
 
 export default function Home() {
   return (
@@ -24,13 +24,13 @@ export default function Home() {
       </div>
       <Container className="flex flex-col items-center justify-between">
         <Companies />
-        <StatsBanner />
+        <StatsShowcase />
         <ProfilePreview />
-        <Features />
-        <Comparison />
-        <GridFeatures />
-        <Testimonials />
+        <Leaderboard />
       </Container>
+      <div className="mx-auto w-full max-w-[100vw] overflow-x-auto px-4">
+        <OrgChart />
+      </div>
       <div className="relative">
         <div className="absolute inset-0 h-full w-full overflow-hidden">
           <Background />
