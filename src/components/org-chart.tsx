@@ -1489,7 +1489,7 @@ function NodeCard({
               : "bg-white dark:bg-neutral-900",
             isFitLevel &&
               !isSelected &&
-              "border-2 border-green-400",
+              "ring-2 ring-green-400",
             "cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800"
           )}
         >
