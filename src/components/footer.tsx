@@ -52,7 +52,7 @@ export const Footer = () => {
   return (
     <div className="relative">
       <div className="relative border-t border-neutral-100 bg-white px-8 pb-32 pt-20 dark:border-neutral-800 dark:bg-black">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between text-sm text-neutral-500 dark:text-neutral-400 sm:flex-row">
+        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between text-sm text-neutral-500 dark:text-neutral-400 sm:flex-row">
           <div>
             <div className="mb-4 mr-4 md:flex">
               <Logo />
@@ -106,14 +106,14 @@ export const Footer = () => {
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/logo_svg/octopus_happy_dark.svg"
+          src="/logo_svg/octopus_happy_white.svg"
           alt="Octopod"
           className="hidden h-8 w-8 dark:block md:h-14 md:w-14 lg:h-40 lg:w-40 xl:h-52 xl:w-52 2xl:h-64 2xl:w-64"
         />
         <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
           Octo
         </span>
-        <span className="-ml-2 text-neutral-200 dark:text-neutral-700 md:-ml-4 lg:-ml-6">
+        <span className="-ml-2 text-black dark:text-white md:-ml-4 lg:-ml-6">
           pod
         </span>
         <span className="-ml-2 bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent md:-ml-4 lg:-ml-6">

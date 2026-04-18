@@ -28,7 +28,7 @@ function Logo({
         className="block dark:hidden"
       />
       <Image
-        src="/logo_svg/octopus_happy_dark.svg"
+        src="/logo_svg/octopus_happy_white.svg"
         alt="Octopod"
         width={iconSize}
         height={iconSize}

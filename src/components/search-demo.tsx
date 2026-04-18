@@ -142,7 +142,10 @@ const scenes: SearchScene[] = [
       },
       activity: [
         2, 5, 3, 8, 6, 9, 4, 7, 10, 6, 8, 12, 5, 9, 7, 11, 4, 8, 6, 10, 13, 7,
-        9, 5,
+        9, 5, 3, 7, 11, 6, 8, 4, 10, 5, 9, 12, 7, 3, 6, 8, 11, 5, 9, 4, 7, 10,
+        6, 13, 8, 3, 5, 7, 9, 11, 4, 6, 8, 10, 12, 5, 7, 3, 9, 6, 11, 4, 8, 10,
+        5, 7, 13, 6, 3, 9, 8, 11, 4, 7, 5, 10, 6, 12, 3, 8, 9, 5, 7, 11, 4, 6,
+        10, 8, 13, 5, 3, 7, 9, 6, 11, 4, 8, 12,
       ],
       languages: [
         { name: "TypeScript", percent: 52, color: "#3178c6" },
@@ -208,7 +211,10 @@ const scenes: SearchScene[] = [
       },
       activity: [
         4, 7, 5, 3, 8, 6, 9, 11, 7, 5, 10, 8, 6, 12, 4, 7, 9, 5, 8, 6, 10, 3, 7,
-        11,
+        11, 5, 8, 4, 9, 6, 12, 3, 7, 10, 5, 8, 11, 4, 6, 9, 7, 3, 10, 5, 8, 12,
+        6, 4, 9, 7, 11, 3, 5, 8, 10, 6, 4, 7, 12, 9, 3, 5, 11, 8, 6, 4, 10, 7,
+        3, 9, 5, 12, 8, 6, 11, 4, 7, 10, 3, 5, 9, 8, 6, 12, 4, 7, 11, 3, 10, 5,
+        8, 6, 9, 4, 7, 12, 3, 11, 5, 8, 10,
       ],
       languages: [
         { name: "TypeScript", percent: 68, color: "#3178c6" },
@@ -340,9 +346,9 @@ function ActivityChart({ data }: { data: number[] }) {
   ];
 
   return (
-    <div className="flex h-10 flex-col gap-[2px]">
+    <div className="flex flex-col gap-[2px]">
       {Array.from({ length: rows }).map((_, ri) => (
-        <div key={ri} className="flex flex-1 gap-[2px]">
+        <div key={ri} className="flex gap-[2px]">
           {Array.from({ length: cols }).map((_, ci) => {
             const idx = ci * rows + ri;
             const val = idx < data.length ? data[idx] : 0;
@@ -353,7 +359,7 @@ function ActivityChart({ data }: { data: number[] }) {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.1, delay: ri * 0.02 + ci * 0.015 }}
-                className={`flex-1 rounded-[2px] ${colors[level]}`}
+                className={`h-3 w-3 rounded-[2px] ${colors[level]}`}
               />
             );
           })}
@@ -684,7 +690,7 @@ export const SearchDemo = () => {
   return (
     <div className="flex w-full flex-col items-center">
       {/* Container for search bar + profile card stacked */}
-      <div className="relative flex w-full max-w-3xl flex-col items-center">
+      <div className="relative flex w-full max-w-4xl flex-col items-center">
         {/* Detection pills */}
         <div className="relative z-10 mb-3 rounded-full bg-white/60 px-2 py-1 shadow-md shadow-neutral-200/50 backdrop-blur-sm dark:bg-neutral-900/60 dark:shadow-neutral-900/30">
           <DetectionPills
