@@ -1437,6 +1437,52 @@ function ProfileOverlay({
   );
 }
 
+// ── Single pulse dot that cascades from root, splitting at branches ──
+const PULSE_CYCLE = 5;
+const PULSE_TRAVEL = 0.35;
+const DEPTH_GAP = 0.7; // time per full level: vertical + horizontal + vertical stub
+
+function PulseDotV({ depth, offset = 0 }: { depth: number; offset?: number }) {
+  return (
+    <motion.div
+      className="absolute left-1/2 z-10 h-2 w-2 -translate-x-1/2 rounded-full bg-green-400 shadow-md shadow-green-400/50"
+      animate={{
+        top: ["-4px", "calc(100% + 4px)"],
+        opacity: [0, 1, 1, 0],
+      }}
+      transition={{
+        duration: PULSE_TRAVEL,
+        repeat: Infinity,
+        repeatDelay: PULSE_CYCLE - PULSE_TRAVEL,
+        delay: depth * DEPTH_GAP + offset,
+        ease: "linear",
+      }}
+    />
+  );
+}
+
+function PulseDotH({ depth, reverse = false }: { depth: number; reverse?: boolean }) {
+  const hDuration = PULSE_TRAVEL * 2;
+  return (
+    <motion.div
+      className="absolute top-1/2 z-10 h-2 w-2 -translate-y-1/2 rounded-full bg-green-400 shadow-md shadow-green-400/50"
+      animate={{
+        left: reverse
+          ? ["calc(100% + 4px)", "-4px"]
+          : ["-4px", "calc(100% + 4px)"],
+        opacity: [0, 1, 1, 0],
+      }}
+      transition={{
+        duration: hDuration,
+        repeat: Infinity,
+        repeatDelay: PULSE_CYCLE - hDuration,
+        delay: depth * DEPTH_GAP + PULSE_TRAVEL,
+        ease: "linear",
+      }}
+    />
+  );
+}
+
 // ── Node card ──
 function NodeCard({
   node,
@@ -1552,24 +1598,38 @@ function NodeCard({
             className="overflow-hidden"
           >
             {/* Vertical connector */}
-            <div className="mx-auto h-6 w-px bg-neutral-300 dark:bg-neutral-600" />
+            <div className="relative mx-auto h-6 w-px bg-neutral-300 dark:bg-neutral-600">
+              <PulseDotV depth={depth} />
+            </div>
 
             {/* Horizontal connector + children */}
-            <div className="relative flex items-start gap-6">
-              {node.children!.length > 1 && (
+            <div className="relative flex items-start">
+              {node.children!.map((child, idx) => (
                 <div
-                  className="absolute top-0 h-px bg-neutral-300 dark:bg-neutral-600"
-                  style={{
-                    left: `calc(50% / ${node.children!.length})`,
-                    right: `calc(50% / ${node.children!.length})`,
-                  }}
-                />
-              )}
-
-              {node.children!.map((child) => (
-                <div key={child.id} className="flex flex-col items-center">
+                  key={child.id}
+                  className="relative flex flex-col items-center px-3"
+                >
                   {node.children!.length > 1 && (
-                    <div className="h-6 w-px bg-neutral-300 dark:bg-neutral-600" />
+                    <>
+                      <div
+                        className={cn(
+                          "absolute top-0 h-px bg-neutral-300 dark:bg-neutral-600",
+                          idx === 0
+                            ? "left-1/2 right-0"
+                            : idx === node.children!.length - 1
+                              ? "left-0 right-1/2"
+                              : "left-0 right-0"
+                        )}
+                      >
+                        <PulseDotH
+                          depth={depth}
+                          reverse={idx < Math.floor(node.children!.length / 2)}
+                        />
+                      </div>
+                      <div className="relative h-6 w-px bg-neutral-300 dark:bg-neutral-600">
+                        <PulseDotV depth={depth} offset={PULSE_TRAVEL * 2} />
+                      </div>
+                    </>
                   )}
                   <NodeCard
                     node={child}
