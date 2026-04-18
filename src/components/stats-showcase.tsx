@@ -30,7 +30,16 @@ function AnimatedNumber({ target, duration = 2 }: { target: number; duration?: n
     requestAnimationFrame(step);
   }, [inView, target, duration]);
 
-  return <span ref={ref}>{count.toLocaleString()}</span>;
+  const formatted = count.toLocaleString();
+  const finalFormatted = target.toLocaleString();
+
+  return (
+    <span ref={ref} className="relative inline-block tabular-nums">
+      {/* Invisible placeholder to reserve final width */}
+      <span className="invisible">{finalFormatted}</span>
+      <span className="absolute inset-0 text-right">{formatted}</span>
+    </span>
+  );
 }
 
 // ── Network graph SVG ──
