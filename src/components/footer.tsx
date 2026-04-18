@@ -52,7 +52,7 @@ export const Footer = () => {
   return (
     <div className="relative">
       <div className="relative border-t border-neutral-100 bg-white px-8 pb-32 pt-20 dark:border-neutral-800 dark:bg-black">
-        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between text-sm text-neutral-500 dark:text-neutral-400 sm:flex-row">
+        <div className="mx-auto flex max-w-3xl flex-col items-start justify-between text-sm text-neutral-500 dark:text-neutral-400 sm:flex-row">
           <div>
             <div className="mb-4 mr-4 md:flex">
               <Logo />
