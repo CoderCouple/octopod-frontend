@@ -1,10 +1,40 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+import { IconBrandGithub } from "@tabler/icons-react";
+import { AnimatePresence, motion } from "framer-motion";
 import Balancer from "react-wrap-balancer";
 
 import { Button } from "@/components/ui/button";
 
+const platforms = [
+  {
+    icon: <IconBrandGithub className="inline h-7 w-7 md:h-10 md:w-10" />,
+    name: "GitHub",
+  },
+  {
+    icon: (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/logo_svg/huggingface-brand.svg"
+        alt="Hugging Face"
+        className="inline h-7 w-7 md:h-10 md:w-10"
+      />
+    ),
+    name: "Hugging Face",
+  },
+];
+
 export const CTA = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % platforms.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <section className="relative z-30 w-full overflow-hidden py-60">
       <div className="bg-white dark:bg-black">
@@ -25,8 +55,23 @@ export const CTA = () => {
             ></div>
 
             <div className="relative px-6 pb-14 pt-20 sm:px-10 sm:pb-20 lg:px-[4.5rem]">
-              <h2 className="mx-auto text-balance text-center text-3xl font-semibold tracking-[-0.015em] text-white md:text-5xl">
-                Your next great hire is already on GitHub.
+              <h2 className="mx-auto whitespace-nowrap text-center text-3xl font-semibold tracking-[-0.015em] text-white md:text-5xl">
+                Your next great hire is already on{" "}
+                <span className="relative inline-flex h-[1.8em] w-[14rem] overflow-hidden align-[-1.5rem] md:w-[26rem]">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={index}
+                      initial={{ y: "100%", opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: "-100%", opacity: 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="absolute inset-x-0 bottom-[0.25em] inline-flex items-center gap-1.5 whitespace-nowrap"
+                    >
+                      {platforms[index].icon}
+                      {platforms[index].name}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
               </h2>
               <p className="mx-auto mt-4 max-w-[26rem] text-center text-base/6 text-neutral-200">
                 <Balancer>
