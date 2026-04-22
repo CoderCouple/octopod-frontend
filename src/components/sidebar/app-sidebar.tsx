@@ -3,20 +3,17 @@
 import Image from "next/image";
 
 import {
-  BarChart3,
-  BriefcaseBusiness,
-  HelpCircle,
+  Download,
   LayoutDashboard,
-  Settings,
-  Users,
+  Mail,
+  Search,
+  Settings2,
 } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -29,15 +26,37 @@ import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 
 const navMain = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Candidates", url: "/candidates", icon: Users },
-  { title: "Jobs", url: "/jobs", icon: BriefcaseBusiness },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
-];
-
-const navSecondary = [
-  { title: "Settings", url: "#", icon: Settings },
-  { title: "Help", url: "#", icon: HelpCircle },
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Search",
+    url: "/search",
+    icon: Search,
+    isActive: true,
+    items: [{ title: "Developers", url: "/search" }],
+  },
+  {
+    title: "Email Sequence",
+    url: "/email-sequence",
+    icon: Mail,
+    items: [
+      { title: "Campaigns", url: "/email-sequence" },
+      { title: "Templates", url: "/email-sequence/templates" },
+    ],
+  },
+  {
+    title: "Ingestor",
+    url: "/ingestor",
+    icon: Download,
+  },
+  {
+    title: "Settings",
+    url: "#",
+    icon: Settings2,
+  },
 ];
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
@@ -54,30 +73,37 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="!p-1.5">
+            <SidebarMenuButton asChild size="lg" className="!p-1.5">
               <a href="/dashboard" className="flex items-center gap-2">
-                <Image
-                  src="/logo_svg/octopus_happy_light.svg"
-                  alt="Octopod"
-                  width={24}
-                  height={24}
-                  className="block dark:hidden"
-                />
-                <Image
-                  src="/logo_svg/octopus_happy_dark.svg"
-                  alt="Octopod"
-                  width={24}
-                  height={24}
-                  className="hidden dark:block"
-                />
-                <span className="text-base font-semibold">
-                  <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text font-extrabold text-transparent">
-                    Octo
+                <div className="flex aspect-square size-8 items-center justify-center">
+                  <Image
+                    src="/logo_svg/octopus_happy_light.svg"
+                    alt="Octopod"
+                    width={24}
+                    height={24}
+                    className="block dark:hidden"
+                  />
+                  <Image
+                    src="/logo_svg/octopus_happy_dark.svg"
+                    alt="Octopod"
+                    width={24}
+                    height={24}
+                    className="hidden dark:block"
+                  />
+                </div>
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="text-lg font-semibold">
+                    <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text font-extrabold text-transparent">
+                      Octo
+                    </span>
+                    <span className="text-stone-700 dark:text-stone-300">
+                      pod
+                    </span>
+                    <span className="ml-1 bg-gradient-to-r from-green-600 to-green-500 bg-clip-text font-extrabold text-transparent">
+                      AI
+                    </span>
                   </span>
-                  <span className="text-stone-700 dark:text-stone-300">
-                    pod
-                  </span>
-                </span>
+                </div>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -85,22 +111,6 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
-        <SidebarGroup className="mt-auto">
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navSecondary.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild size="sm">
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={userData} onSignOut={signOut} />
