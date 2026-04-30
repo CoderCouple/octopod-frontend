@@ -1,5 +1,5 @@
-import { getApp, getApps, initializeApp } from "firebase/app";
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
+import { type FirebaseApp, getApp, getApps, initializeApp } from "firebase/app";
+import { type Auth, GoogleAuthProvider, getAuth } from "firebase/auth";
 
 /* eslint-disable n/no-process-env */
 const firebaseConfig = {
@@ -12,8 +12,31 @@ const firebaseConfig = {
 };
 /* eslint-enable n/no-process-env */
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
+let _app: FirebaseApp | null = null;
+let _auth: Auth | null = null;
+let _googleProvider: GoogleAuthProvider | null = null;
 
-export { app, auth, googleProvider };
+function getFirebaseApp(): FirebaseApp {
+  if (_app) return _app;
+  _app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  return _app;
+}
+
+function getFirebaseAuth(): Auth {
+  if (_auth) return _auth;
+  _auth = getAuth(getFirebaseApp());
+  return _auth;
+}
+
+function getGoogleProvider(): GoogleAuthProvider {
+  if (_googleProvider) return _googleProvider;
+  _googleProvider = new GoogleAuthProvider();
+  return _googleProvider;
+}
+
+// Lazy getters — safe during SSG/build when env vars are absent
+export {
+  getFirebaseApp as app,
+  getFirebaseAuth as auth,
+  getGoogleProvider as googleProvider,
+};

@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth(), async (user) => {
       setUser(user);
       await setSessionCookie(user);
       setLoading(false);
@@ -53,19 +53,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(auth(), email, password);
   }, []);
 
   const signUp = useCallback(async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    await createUserWithEmailAndPassword(auth(), email, password);
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
-    await signInWithPopup(auth, googleProvider);
+    await signInWithPopup(auth(), googleProvider());
   }, []);
 
   const signOut = useCallback(async () => {
-    await firebaseSignOut(auth);
+    await firebaseSignOut(auth());
   }, []);
 
   const value = useMemo(
