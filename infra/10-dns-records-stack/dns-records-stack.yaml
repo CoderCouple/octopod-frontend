@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DNS records to point root domain and www to web ALB
+
+Parameters:
+  PublicHostedZoneName:
+    Description: Name of publicly hosted zone for the project
+    Type: String
+    Default: octopodai.app.
+  PublicHostedZoneId:
+    Description: Route53 Hosted Zone ID for the domain
+    Type: String
+    Default: Z03244512LEQXUVHET7FJ
+  NextJSStackName:
+    Description: Name of the Next.js ECS stack to import ALB details
+    Type: String
+    Default: ctx0ai-dev-nextjs-ecs-stack
+
+Resources:
+  # Root domain (octopodai.app) pointing to web ALB
+  RootDomainRecord:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      AliasTarget:
+        DNSName: 
+          Fn::ImportValue: !Sub "${NextJSStackName}-NextJSLoadBalancerDNSName"
+        EvaluateTargetHealth: false
+        HostedZoneId: 
+          Fn::ImportValue: !Sub "${NextJSStackName}-NextJSLoadBalancerCanonicalHostedZoneID"
+      Comment: Root domain pointing to Next.js web ALB
+      HostedZoneId: !Ref PublicHostedZoneId
+      Name: octopodai.app.
+      Type: A
+
+  # WWW subdomain (www.octopodai.app) pointing to web ALB
+  WWWDomainRecord:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      AliasTarget:
+        DNSName: 
+          Fn::ImportValue: !Sub "${NextJSStackName}-NextJSLoadBalancerDNSName"
+        EvaluateTargetHealth: false
+        HostedZoneId: 
+          Fn::ImportValue: !Sub "${NextJSStackName}-NextJSLoadBalancerCanonicalHostedZoneID"
+      Comment: WWW subdomain pointing to Next.js web ALB
+      HostedZoneId: !Ref PublicHostedZoneId
+      Name: www.octopodai.app.
+      Type: A
+
+Outputs:
+  RootDomainURL:
+    Description: Root domain URL
+    Value: https://octopodai.app
+    Export:
+      Name: !Sub "${AWS::StackName}-RootDomainURL"
+
+  WWWDomainURL:
+    Description: WWW domain URL
+    Value: https://www.octopodai.app
+    Export:
+      Name: !Sub "${AWS::StackName}-WWWDomainURL"

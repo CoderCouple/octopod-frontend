@@ -2,6 +2,11 @@
 
 import { useRef, useState } from "react";
 
+import {
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconRobot,
+} from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
@@ -11,11 +16,6 @@ import {
   User,
   X,
 } from "lucide-react";
-import {
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconRobot,
-} from "@tabler/icons-react";
 
 import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
@@ -1461,7 +1461,13 @@ function PulseDotV({ depth, offset = 0 }: { depth: number; offset?: number }) {
   );
 }
 
-function PulseDotH({ depth, reverse = false }: { depth: number; reverse?: boolean }) {
+function PulseDotH({
+  depth,
+  reverse = false,
+}: {
+  depth: number;
+  reverse?: boolean;
+}) {
   const hDuration = PULSE_TRAVEL * 2;
   return (
     <motion.div
@@ -1531,11 +1537,9 @@ function NodeCard({
           className={cn(
             "relative flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-left shadow-sm transition-all dark:border-neutral-700",
             isSelected
-              ? "ring-2 ring-neutral-400 bg-neutral-50 dark:bg-neutral-800 dark:ring-neutral-500"
+              ? "bg-neutral-50 ring-2 ring-neutral-400 dark:bg-neutral-800 dark:ring-neutral-500"
               : "bg-white dark:bg-neutral-900",
-            isFitLevel &&
-              !isSelected &&
-              "ring-2 ring-green-400",
+            isFitLevel && !isSelected && "ring-2 ring-green-400",
             "cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800"
           )}
         >
@@ -1579,10 +1583,7 @@ function NodeCard({
         {/* Profile overlay (fixed position — no clipping) */}
         <AnimatePresence>
           {isSelected && (
-            <ProfileOverlay
-              node={node}
-              onClose={() => onSelect(null)}
-            />
+            <ProfileOverlay node={node} onClose={() => onSelect(null)} />
           )}
         </AnimatePresence>
       </div>
@@ -1734,7 +1735,7 @@ export const OrgChart = () => {
         {/* Floating recruiter cursor */}
         <FloatingRecruiterCursor containerRef={treeRef} />
 
-        <div className="flex min-w-[700px] justify-center pb-4 px-6">
+        <div className="flex min-w-[700px] justify-center px-6 pb-4">
           <NodeCard
             node={tree}
             selectedId={selectedNode?.id ?? null}

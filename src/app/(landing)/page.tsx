@@ -2,20 +2,18 @@ import { Background } from "@/components/background";
 import { Companies } from "@/components/companies";
 import { Container } from "@/components/container";
 import { CTA } from "@/components/cta";
-
 import { Hero } from "@/components/hero";
 import { Leaderboard } from "@/components/leaderboard";
 import { OrgChart } from "@/components/org-chart";
 import { ProfilePreview } from "@/components/profile-preview";
 import { StatsShowcase } from "@/components/stats-showcase";
 
-
 export default function Home() {
   return (
     <div className="relative">
       {/* Hero with activity grid background */}
       <div className="relative">
-        <div className="absolute inset-x-0 top-16 bottom-0 overflow-hidden">
+        <div className="absolute inset-x-0 bottom-0 top-16 overflow-hidden">
           <Background />
         </div>
         <Container>

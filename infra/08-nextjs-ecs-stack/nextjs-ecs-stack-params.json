@@ -1,0 +1,66 @@
+[
+  {
+    "ParameterKey": "OrganizationName",
+    "ParameterValue": "OctopodAI"
+  },
+  {
+    "ParameterKey": "DomainName",
+    "ParameterValue": "octopodai.app"
+  },
+  {
+    "ParameterKey": "ProjectName",
+    "ParameterValue": "octopodai"
+  },
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "dev"
+  },
+  {
+    "ParameterKey": "ClusterMinSize",
+    "ParameterValue": "1"
+  },
+  {
+    "ParameterKey": "ClusterMaxSize",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "ClusterRollSize",
+    "ParameterValue": "1"
+  },
+  {
+    "ParameterKey": "NetworkStackName",
+    "ParameterValue": "octopodai-dev-network-stack"
+  },
+  {
+    "ParameterKey": "DockerRepositoryName",
+    "ParameterValue": "octopod-web-dev-ecr-repo"
+  },
+  {
+    "ParameterKey": "SSHKeyName",
+    "ParameterValue": "octopod-dev-key"
+  },
+  {
+    "ParameterKey": "ClusterStackName",
+    "ParameterValue": "octopodai-dev-ecs-cluster"
+  },
+  {
+    "ParameterKey": "PublicHostedZoneName",
+    "ParameterValue": "octopodai.app."
+  },
+  {
+    "ParameterKey": "PublicHostedZoneId",
+    "ParameterValue": "Z01109651O85TIUV7ZIYT"
+  },
+  {
+    "ParameterKey": "DomainNameForCertificate",
+    "ParameterValue": "octopodai.app"
+  },
+  {
+    "ParameterKey": "ServiceDiscoveryName",
+    "ParameterValue": "web"
+  },
+  {
+    "ParameterKey": "PythonECSStackName",
+    "ParameterValue": "octopodai-dev-python-ecs-stack"
+  }
+]

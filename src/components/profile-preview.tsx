@@ -346,7 +346,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
     <div className="w-full shrink-0 px-4">
       <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-lg dark:border-neutral-800 dark:bg-neutral-900">
         {/* Header */}
-        <div className="px-8 pt-6 pb-5">
+        <div className="px-8 pb-5 pt-6">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-800 text-xl font-bold text-white dark:bg-neutral-200 dark:text-neutral-900">
@@ -414,7 +414,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
         </div>
 
         {/* Stats bar */}
-        <div className="border-t border-b border-neutral-100 bg-neutral-50/50 px-8 py-3 dark:border-neutral-800 dark:bg-neutral-800/30">
+        <div className="border-b border-t border-neutral-100 bg-neutral-50/50 px-8 py-3 dark:border-neutral-800 dark:bg-neutral-800/30">
           <div className="grid grid-cols-6 gap-4">
             {profile.stats.map((stat) => (
               <div key={stat.label} className="text-center">
@@ -533,10 +533,10 @@ export const ProfilePreview = () => {
     <div className="relative z-20 py-10 md:py-40">
       <Heading as="h2">One unified profile, zero guesswork</Heading>
       <Subheading className="text-center text-neutral-600 dark:text-neutral-300">
-        Octopod&apos;s proprietary algorithm analyzes commits, repos, open-source
-        impact, and professional activity across GitHub, LinkedIn, and Hugging
-        Face — so you see exactly who&apos;s shipping real code before you ever
-        reach out.
+        Octopod&apos;s proprietary algorithm analyzes commits, repos,
+        open-source impact, and professional activity across GitHub, LinkedIn,
+        and Hugging Face — so you see exactly who&apos;s shipping real code
+        before you ever reach out.
       </Subheading>
 
       {/* Carousel */}

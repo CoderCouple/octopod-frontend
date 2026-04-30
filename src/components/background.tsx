@@ -39,7 +39,7 @@ export const Background = () => {
         const duration = +(3 + rand(i, 389) * 5).toFixed(1);
         return { level, pulses, delay, duration };
       }),
-    [],
+    []
   );
 
   return (

@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "ProjectName",
+    "ParameterValue": "octopod-web"
+  },
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "dev"
+  },
+  {
+    "ParameterKey": "GitHubOrgName",
+    "ParameterValue": "CoderCouple"
+  },
+  {
+    "ParameterKey": "GitHubRepositoryName",
+    "ParameterValue": "octopod-frontend"
+  },
+  {
+    "ParameterKey": "ECRRepositoryName",
+    "ParameterValue": "octopod-web-dev-ecr-repo"
+  },
+  {
+    "ParameterKey": "AWSRegion",
+    "ParameterValue": "us-west-2"
+  },
+  {
+    "ParameterKey": "GitHubTokenSecretName",
+    "ParameterValue": "OCTOPOD-BACKEND-GITHUB-TOKEN"
+  }
+]

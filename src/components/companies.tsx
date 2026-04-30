@@ -13,15 +13,10 @@ import {
 } from "@tabler/icons-react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 
-
 function HuggingFaceIcon({ className }: { className?: string }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src="/logo_svg/huggingface-brand.svg"
-      alt="HF"
-      className={className}
-    />
+    <img src="/logo_svg/huggingface-brand.svg" alt="HF" className={className} />
   );
 }
 
@@ -94,9 +89,7 @@ function GitHubSourceCard({
               key={i}
               initial={{ height: 0 }}
               animate={
-                active
-                  ? { height: `${(val / max) * 100}%` }
-                  : { height: 0 }
+                active ? { height: `${(val / max) * 100}%` } : { height: 0 }
               }
               transition={{ duration: 0.4, delay: delay + i * 0.03 }}
               className="flex-1 rounded-sm bg-green-500"
@@ -280,9 +273,7 @@ function HuggingFaceSourceCard({
 function OctopusEngine({ active }: { active: boolean }) {
   return (
     <motion.div
-      animate={
-        active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }
-      }
+      animate={active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
       transition={{ duration: 0.5, type: "spring" }}
       className="relative flex h-48 w-48 shrink-0 items-center justify-center self-center xl:h-64 xl:w-64"
     >

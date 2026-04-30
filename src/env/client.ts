@@ -9,6 +9,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: z.string().optional(),
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: z.string().optional(),
     NEXT_PUBLIC_FIREBASE_APP_ID: z.string().min(1),
+    NEXT_PUBLIC_INGEST_API_URL: z.string().optional(),
   },
 
   runtimeEnv: {
@@ -30,5 +31,8 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_APP_ID:
       // eslint-disable-next-line n/no-process-env
       process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    NEXT_PUBLIC_INGEST_API_URL:
+      // eslint-disable-next-line n/no-process-env
+      process.env.NEXT_PUBLIC_INGEST_API_URL,
   },
 });

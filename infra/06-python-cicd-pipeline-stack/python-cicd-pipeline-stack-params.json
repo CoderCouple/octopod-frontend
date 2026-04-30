@@ -1,0 +1,42 @@
+[
+  {
+    "ParameterKey": "PipelineName",
+    "ParameterValue": "octopodai-dev-python-cicd-pipeline"
+  },
+  {
+    "ParameterKey": "GitHubOrganization",
+    "ParameterValue": "CoderCouple"
+  },
+  {
+    "ParameterKey": "GitHubRepo",
+    "ParameterValue": "octopod-backend"
+  },
+  {
+    "ParameterKey": "CodeBuildProjectName",
+    "ParameterValue": "octopod-backend-api-dev-build"
+  },
+  {
+    "ParameterKey": "ClusterStackName",
+    "ParameterValue": "octopodai-dev-ecs-cluster"
+  },
+  {
+    "ParameterKey": "ECSServiceName",
+    "ParameterValue": "octopodai-dev-python-service"
+  },
+  {
+    "ParameterKey": "SNSTopicName",
+    "ParameterValue": "octopodai-dev-python-cicd-pipeline"
+  },
+  {
+    "ParameterKey": "GitHubTokenSecretName",
+    "ParameterValue": "OCTOPOD-BACKEND-GITHUB-TOKEN"
+  },
+  {
+    "ParameterKey": "UseCodeStarConnection",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "CodeStarConnectionArn",
+    "ParameterValue": "arn:aws:codeconnections:us-west-2:349738643995:connection/6fa66152-d2df-4f3c-aa34-c7891c95cc5a"
+  }
+]

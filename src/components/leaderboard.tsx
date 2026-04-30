@@ -2,6 +2,11 @@
 
 import { useRef, useState } from "react";
 
+import {
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconRobot,
+} from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
@@ -13,11 +18,6 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import {
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconRobot,
-} from "@tabler/icons-react";
 
 import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
@@ -189,8 +189,7 @@ const tierColors: Record<Tier, string> = {
 };
 
 const signalColors: Record<Signal, string> = {
-  Elite:
-    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
+  Elite: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
   Sharp: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400",
   Capable:
     "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400",
@@ -266,9 +265,9 @@ function CandidateOverlay({
   candidate: Candidate;
   onClose: () => void;
 }) {
-  const [emailState, setEmailState] = useState<
-    "idle" | "sending" | "sent"
-  >("idle");
+  const [emailState, setEmailState] = useState<"idle" | "sending" | "sent">(
+    "idle"
+  );
   const [connectState, setConnectState] = useState<
     "idle" | "connecting" | "connected"
   >("idle");
@@ -544,8 +543,9 @@ function CandidateOverlay({
 export const Leaderboard = () => {
   const [activeFilter, setActiveFilter] =
     useState<(typeof filters)[number]>("All");
-  const [selectedCandidate, setSelectedCandidate] =
-    useState<Candidate | null>(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
+    null
+  );
   const tableRef = useRef<HTMLDivElement>(null);
 
   const filtered =

@@ -9,7 +9,13 @@ import { Subheading } from "@/components/subheading";
 import { cn } from "@/lib/utils";
 
 // ── Animated counter ──
-function AnimatedNumber({ target, duration = 2 }: { target: number; duration?: number }) {
+function AnimatedNumber({
+  target,
+  duration = 2,
+}: {
+  target: number;
+  duration?: number;
+}) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
@@ -110,7 +116,11 @@ function NetworkGraph() {
           cy={n.y}
           r={greenOuter.includes(i) ? 3 : 2.5}
           fill={greenOuter.includes(i) ? "#16a34a" : "currentColor"}
-          className={greenOuter.includes(i) ? "" : "text-neutral-800 dark:text-neutral-300"}
+          className={
+            greenOuter.includes(i)
+              ? ""
+              : "text-neutral-800 dark:text-neutral-300"
+          }
         />
       ))}
       {/* Inner dots */}
@@ -121,7 +131,11 @@ function NetworkGraph() {
           cy={n.y}
           r={greenInner.includes(i) ? 3.5 : 3}
           fill={greenInner.includes(i) ? "#16a34a" : "currentColor"}
-          className={greenInner.includes(i) ? "" : "text-neutral-800 dark:text-neutral-300"}
+          className={
+            greenInner.includes(i)
+              ? ""
+              : "text-neutral-800 dark:text-neutral-300"
+          }
         />
       ))}
     </svg>
@@ -136,7 +150,11 @@ const platforms = [
     pillBg: "bg-neutral-900 dark:bg-neutral-100",
     pillText: "text-white dark:text-neutral-900",
     icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor">
+      <svg
+        viewBox="0 0 24 24"
+        className="h-5 w-5 sm:h-6 sm:w-6"
+        fill="currentColor"
+      >
         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
       </svg>
     ),
@@ -150,7 +168,11 @@ const platforms = [
     icon: (
       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white sm:h-8 sm:w-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo_svg/huggingface-brand.svg" alt="Hugging Face" className="h-5 w-5 sm:h-6 sm:w-6" />
+        <img
+          src="/logo_svg/huggingface-brand.svg"
+          alt="Hugging Face"
+          className="h-5 w-5 sm:h-6 sm:w-6"
+        />
       </span>
     ),
   },
@@ -161,7 +183,11 @@ const platforms = [
     pillBg: "bg-[#0A66C2] dark:bg-[#0A66C2]",
     pillText: "text-white dark:text-white",
     icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor">
+      <svg
+        viewBox="0 0 24 24"
+        className="h-5 w-5 sm:h-6 sm:w-6"
+        fill="currentColor"
+      >
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
       </svg>
     ),
@@ -207,7 +233,7 @@ export const StatsShowcase = () => {
                 <AnimatedNumber target={p.count} duration={2 + i * 0.3} />
               </span>
             </div>
-            <p className="text-[10px] font-medium tracking-wide uppercase text-neutral-500 dark:text-neutral-400">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
               {p.label}
             </p>
           </motion.div>
@@ -225,23 +251,44 @@ export const StatsShowcase = () => {
           className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900 sm:p-5"
         >
           <div className="mb-3 flex items-center gap-2">
-            <svg viewBox="0 0 24 24" className="h-6 w-6 text-neutral-900 dark:text-white" fill="currentColor">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-6 w-6 text-neutral-900 dark:text-white"
+              fill="currentColor"
+            >
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
             </svg>
-            <span className="text-sm font-bold tracking-wide uppercase text-neutral-900 dark:text-white">GitHub</span>
+            <span className="text-sm font-bold uppercase tracking-wide text-neutral-900 dark:text-white">
+              GitHub
+            </span>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">90M+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Repositories tracked</p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                90M+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Repositories tracked
+              </p>
             </div>
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">2.1B+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Commits analyzed</p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                2.1B+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Commits analyzed
+              </p>
             </div>
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">150K+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">New activities <span className="font-extrabold text-neutral-900 dark:text-white">daily</span></p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                150K+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                New activities{" "}
+                <span className="font-extrabold text-neutral-900 dark:text-white">
+                  daily
+                </span>
+              </p>
             </div>
           </div>
         </motion.div>
@@ -256,21 +303,42 @@ export const StatsShowcase = () => {
         >
           <div className="mb-3 flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo_svg/huggingface-brand.svg" alt="Hugging Face" className="h-6 w-6" />
-            <span className="text-sm font-bold tracking-wide uppercase text-yellow-700 dark:text-yellow-400">Hugging Face</span>
+            <img
+              src="/logo_svg/huggingface-brand.svg"
+              alt="Hugging Face"
+              className="h-6 w-6"
+            />
+            <span className="text-sm font-bold uppercase tracking-wide text-yellow-700 dark:text-yellow-400">
+              Hugging Face
+            </span>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">800K+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Models &amp; datasets tracked</p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                800K+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Models &amp; datasets tracked
+              </p>
             </div>
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">45K+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Spaces analyzed</p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                45K+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Spaces analyzed
+              </p>
             </div>
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">12K+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">New uploads <span className="font-extrabold text-neutral-900 dark:text-white">daily</span></p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                12K+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                New uploads{" "}
+                <span className="font-extrabold text-neutral-900 dark:text-white">
+                  daily
+                </span>
+              </p>
             </div>
           </div>
         </motion.div>
@@ -284,28 +352,48 @@ export const StatsShowcase = () => {
           className="rounded-xl border border-blue-200 bg-blue-50/50 p-4 shadow-sm dark:border-blue-900/40 dark:bg-blue-950/10 sm:p-5"
         >
           <div className="mb-3 flex items-center gap-2">
-            <svg viewBox="0 0 24 24" className="h-6 w-6 text-[#0A66C2]" fill="currentColor">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-6 w-6 text-[#0A66C2]"
+              fill="currentColor"
+            >
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
-            <span className="text-sm font-bold tracking-wide uppercase text-[#0A66C2]">LinkedIn</span>
+            <span className="text-sm font-bold uppercase tracking-wide text-[#0A66C2]">
+              LinkedIn
+            </span>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">12.5M+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Engineer profiles indexed</p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                12.5M+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Engineer profiles indexed
+              </p>
             </div>
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">5.8M+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Skills &amp; endorsements mapped</p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                5.8M+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Skills &amp; endorsements mapped
+              </p>
             </div>
             <div className="text-center sm:text-left">
-              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">38K+</span>
-              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Profile updates <span className="font-extrabold text-neutral-900 dark:text-white">daily</span></p>
+              <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-3xl">
+                38K+
+              </span>
+              <p className="mt-1.5 text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Profile updates{" "}
+                <span className="font-extrabold text-neutral-900 dark:text-white">
+                  daily
+                </span>
+              </p>
             </div>
           </div>
         </motion.div>
       </div>
-
     </div>
   );
 };

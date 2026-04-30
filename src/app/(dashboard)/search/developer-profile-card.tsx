@@ -1,28 +1,22 @@
 "use client";
 
-import { ExternalLink, GitFork, Star, Users } from "lucide-react";
+import {
+  ExternalLink,
+  GitFork,
+  Github,
+  Globe,
+  Plus,
+  Star,
+  Users,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import type { SearchResult } from "@/types/search";
 
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
-
-function scoreColor(score: number) {
-  if (score >= 0.8)
-    return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-  if (score >= 0.6)
-    return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-  return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400";
-}
+import { formatCount, getInitials, scoreLabel } from "./utils";
 
 function RankingBar({ label, value }: { label: string; value: number }) {
   return (
@@ -45,151 +39,228 @@ function RankingBar({ label, value }: { label: string; value: number }) {
 
 export function DeveloperProfileCard({ result }: { result: SearchResult }) {
   const { profile, score, ranking } = result;
+  const { label, className } = scoreLabel(score);
 
   const hasHfStats =
     profile.total_hf_models > 0 ||
     profile.total_hf_datasets > 0 ||
     profile.total_hf_downloads > 0;
 
+  const levelLabel =
+    profile.years_of_experience >= 8
+      ? "SENIOR LEVEL"
+      : profile.years_of_experience >= 4
+        ? "MID LEVEL"
+        : profile.years_of_experience > 0
+          ? "JUNIOR LEVEL"
+          : null;
+
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-start gap-4">
-          <Avatar className="size-16 shrink-0">
-            <AvatarImage src={profile.avatar_url} alt={profile.display_name} />
-            <AvatarFallback className="text-lg">
-              {getInitials(profile.display_name)}
-            </AvatarFallback>
-          </Avatar>
+      <CardContent className="p-6">
+        <div className="flex items-start gap-5">
+          {/* Left column — avatar & stats */}
+          <div className="flex shrink-0 flex-col items-center gap-3">
+            <Avatar className="size-20">
+              <AvatarImage
+                src={profile.avatar_url}
+                alt={profile.display_name}
+              />
+              <AvatarFallback className="text-xl">
+                {getInitials(profile.display_name)}
+              </AvatarFallback>
+            </Avatar>
 
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-3">
-              <h3 className="truncate text-lg font-semibold">
-                {profile.display_name}
-              </h3>
-              <Badge className={`${scoreColor(score)} shrink-0 border-0`}>
-                {Math.round(score * 100)}%
-              </Badge>
-            </div>
-
-            {profile.headline && (
-              <p className="mt-0.5 text-sm text-muted-foreground">
-                {profile.headline}
+            <div className="space-y-1 text-center text-xs text-muted-foreground">
+              <p className="flex items-center gap-1">
+                <Users className="size-3" />
+                {formatCount(profile.total_followers)} followers
               </p>
-            )}
+              <p className="flex items-center gap-1">
+                <Star className="size-3 text-yellow-500" />
+                {formatCount(profile.total_stars)} stars
+              </p>
+            </div>
+          </div>
 
-            <div className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
-              {profile.location && <span>{profile.location}</span>}
-              {profile.location && profile.company && <span>·</span>}
-              {profile.company && <span>{profile.company}</span>}
-              {profile.website && (
-                <>
-                  <span>·</span>
+          {/* Right column — details */}
+          <div className="min-w-0 flex-1">
+            {/* Row 1: name, level, social icons */}
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h3 className="text-lg font-semibold leading-tight">
+                  {profile.display_name}
+                </h3>
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+                  {profile.location && <span>{profile.location}</span>}
+                  {profile.location && levelLabel && (
+                    <span className="text-muted-foreground/40">·</span>
+                  )}
+                  {levelLabel && (
+                    <span className="text-xs font-medium uppercase tracking-wide">
+                      {levelLabel}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-1">
+                {profile.website && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="size-8"
+                    asChild
+                  >
+                    <a
+                      href={
+                        profile.website.startsWith("http")
+                          ? profile.website
+                          : `https://${profile.website}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Globe className="size-3.5" />
+                    </a>
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="size-8"
+                  asChild
+                >
                   <a
-                    href={
-                      profile.website.startsWith("http")
-                        ? profile.website
-                        : `https://${profile.website}`
-                    }
+                    href={`https://github.com/${profile.display_name.replace(/\s+/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-green-600 hover:underline"
                   >
-                    <ExternalLink className="size-3" />
-                    Website
+                    <Github className="size-3.5" />
                   </a>
-                </>
+                </Button>
+              </div>
+            </div>
+
+            {/* Row 2: score badge + headline */}
+            <div className="mt-3 rounded-lg border bg-muted/30 p-3">
+              <div className="flex items-center gap-2">
+                <Badge className={`shrink-0 border-0 ${className}`}>
+                  {label}
+                </Badge>
+                {profile.headline && (
+                  <span className="truncate text-sm font-medium">
+                    {profile.headline}
+                  </span>
+                )}
+              </div>
+              {profile.bio && (
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  {profile.bio}
+                </p>
               )}
+            </div>
+
+            {/* Row 3: stats bar */}
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Users className="size-3.5" />
+                {formatCount(profile.total_followers)} followers
+              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span className="flex items-center gap-1">
+                <Star className="size-3.5" />
+                {formatCount(profile.total_stars)} stars
+              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span className="flex items-center gap-1">
+                <GitFork className="size-3.5" />
+                {formatCount(profile.total_repos)} repos
+              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span>
+                {formatCount(profile.total_contributions)} contributions
+              </span>
+            </div>
+
+            {/* Row 4: badges */}
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {profile.languages.map((lang) => (
+                <Badge key={lang} variant="secondary" className="text-xs">
+                  {lang}
+                </Badge>
+              ))}
+              {profile.skills.map((skill) => (
+                <Badge
+                  key={skill}
+                  variant="secondary"
+                  className="border-green-200 bg-green-50 text-xs text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
+                >
+                  {skill}
+                </Badge>
+              ))}
+              {profile.topics.map((topic) => (
+                <Badge key={topic} variant="outline" className="text-xs">
+                  {topic}
+                </Badge>
+              ))}
+            </div>
+
+            {/* Hugging Face stats */}
+            {hasHfStats && (
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  Hugging Face:
+                </span>
+                {profile.total_hf_models > 0 && (
+                  <span>{profile.total_hf_models} models</span>
+                )}
+                {profile.total_hf_datasets > 0 && (
+                  <span>{profile.total_hf_datasets} datasets</span>
+                )}
+                {profile.total_hf_downloads > 0 && (
+                  <span>
+                    <ExternalLink className="mr-1 inline size-3" />
+                    {formatCount(profile.total_hf_downloads)} downloads
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Ranking breakdown */}
+            {ranking && (
+              <div className="mt-4 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">
+                  Ranking Breakdown
+                </p>
+                <RankingBar
+                  label="GitHub Activity"
+                  value={ranking.github_activity_score}
+                />
+                <RankingBar
+                  label="Technical Influence"
+                  value={ranking.technical_influence_score}
+                />
+                <RankingBar
+                  label="OSS Contribution"
+                  value={ranking.oss_contribution_score}
+                />
+                <RankingBar
+                  label="Experience"
+                  value={ranking.experience_score}
+                />
+              </div>
+            )}
+
+            {/* Add to Sequence button */}
+            <div className="mt-4 flex justify-end">
+              <Button variant="outline" size="sm">
+                <Plus className="mr-1.5 size-3.5" />
+                Add to Sequence
+              </Button>
             </div>
           </div>
         </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        {profile.bio && (
-          <p className="text-sm text-muted-foreground">{profile.bio}</p>
-        )}
-
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <Users className="size-3.5" />
-            {profile.total_followers.toLocaleString()} followers
-          </span>
-          <span>·</span>
-          <span className="flex items-center gap-1">
-            <Star className="size-3.5" />
-            {profile.total_stars.toLocaleString()} stars
-          </span>
-          <span>·</span>
-          <span className="flex items-center gap-1">
-            <GitFork className="size-3.5" />
-            {profile.total_repos.toLocaleString()} repos
-          </span>
-          <span>·</span>
-          <span>
-            {profile.total_contributions.toLocaleString()} contributions
-          </span>
-        </div>
-
-        <div className="flex flex-wrap gap-1.5">
-          {profile.languages.map((lang) => (
-            <Badge key={lang} variant="secondary">
-              {lang}
-            </Badge>
-          ))}
-          {profile.skills.map((skill) => (
-            <Badge
-              key={skill}
-              variant="secondary"
-              className="border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
-            >
-              {skill}
-            </Badge>
-          ))}
-          {profile.topics.map((topic) => (
-            <Badge key={topic} variant="outline">
-              {topic}
-            </Badge>
-          ))}
-        </div>
-
-        {hasHfStats && (
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">Hugging Face:</span>
-            {profile.total_hf_models > 0 && (
-              <span>{profile.total_hf_models} models</span>
-            )}
-            {profile.total_hf_datasets > 0 && (
-              <span>{profile.total_hf_datasets} datasets</span>
-            )}
-            {profile.total_hf_downloads > 0 && (
-              <span>
-                {profile.total_hf_downloads.toLocaleString()} downloads
-              </span>
-            )}
-          </div>
-        )}
-
-        {ranking && (
-          <div className="space-y-2 pt-2">
-            <p className="text-xs font-medium text-muted-foreground">
-              Ranking Breakdown
-            </p>
-            <RankingBar
-              label="GitHub Activity"
-              value={ranking.github_activity_score}
-            />
-            <RankingBar
-              label="Technical Influence"
-              value={ranking.technical_influence_score}
-            />
-            <RankingBar
-              label="OSS Contribution"
-              value={ranking.oss_contribution_score}
-            />
-            <RankingBar label="Experience" value={ranking.experience_score} />
-          </div>
-        )}
       </CardContent>
     </Card>
   );

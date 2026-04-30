@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "PublicHostedZoneName",
+    "ParameterValue": "octopodai.app."
+  },
+  {
+    "ParameterKey": "PublicHostedZoneId",
+    "ParameterValue": "Z01109651O85TIUV7ZIYT"
+  },
+  {
+    "ParameterKey": "NextJSStackName",
+    "ParameterValue": "octopodai-dev-nextjs-ecs-stack"
+  }
+]
