@@ -3,17 +3,13 @@
 import { BarChart3, BriefcaseBusiness, Users } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/hooks/use-auth";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
-
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
-          Welcome back,{" "}
-          {user?.displayName || user?.email?.split("@")[0] || "User"}
+          Welcome back, User
         </h1>
         <p className="text-muted-foreground">
           Here&apos;s an overview of your recruitment pipeline.

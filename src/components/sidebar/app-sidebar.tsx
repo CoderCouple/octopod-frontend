@@ -20,7 +20,6 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/hooks/use-auth";
 
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
@@ -60,12 +59,10 @@ const navMain = [
 ];
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const { user, signOut } = useAuth();
-
   const userData = {
-    name: user?.displayName || user?.email?.split("@")[0] || "User",
-    email: user?.email || "",
-    avatar: user?.photoURL || "",
+    name: "User",
+    email: "",
+    avatar: "",
   };
 
   return (
@@ -113,7 +110,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={userData} onSignOut={signOut} />
+        <NavUser user={userData} onSignOut={() => {}} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

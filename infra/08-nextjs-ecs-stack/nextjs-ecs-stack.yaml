@@ -226,12 +226,6 @@ Resources:
               Value: "1"
             - Name: PORT
               Value: "3000"
-          # TODO: Auth secrets — once decided, add via Secrets block:
-          # Secrets:
-          #   - Name: NEXT_PUBLIC_FIREBASE_API_KEY
-          #     ValueFrom: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:OCTOPOD-FRONTEND-SECRETS:NEXT_PUBLIC_FIREBASE_API_KEY::"
-          #   - Name: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-          #     ValueFrom: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:OCTOPOD-FRONTEND-SECRETS:NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN::"
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -436,7 +430,7 @@ Resources:
     Properties:
       Certificates:
         - CertificateArn:
-            Fn::ImportValue: !Sub "${PythonECSStackName}-WildcardCertificateArn"  # Reuse *.octopodai.app cert from backend stack
+            Fn::ImportValue: !Sub "${PythonECSStackName}-WildcardCertArn"  # Reuse *.octopodai.app cert from backend stack
       DefaultActions:
         - TargetGroupArn: !Ref NextJSTargetGroup
           Type: forward

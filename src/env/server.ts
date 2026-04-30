@@ -8,9 +8,6 @@ expand(config());
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(["development", "production"]),
-    FIREBASE_PROJECT_ID: z.string().min(1),
-    FIREBASE_CLIENT_EMAIL: z.string().min(1),
-    FIREBASE_PRIVATE_KEY: z.string().min(1),
   },
   onValidationError: (issues) => {
     console.error("Invalid environment variables:", issues);

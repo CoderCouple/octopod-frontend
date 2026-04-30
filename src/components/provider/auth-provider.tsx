@@ -1,26 +1,9 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
-import {
-  type User,
-  createUserWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
-
-import { auth, googleProvider } from "@/lib/firebase";
+import { createContext, useMemo } from "react";
 
 export interface AuthContextType {
-  user: User | null;
+  user: null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
@@ -30,47 +13,20 @@ export interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-async function setSessionCookie(user: User | null) {
-  if (user) {
-    const token = await user.getIdToken();
-    document.cookie = `__session=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
-  } else {
-    document.cookie = `__session=; path=/; max-age=0`;
-  }
-}
+const notConfigured = () =>
+  Promise.reject(new Error("Auth is not configured yet"));
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth(), async (user) => {
-      setUser(user);
-      await setSessionCookie(user);
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, []);
-
-  const signIn = useCallback(async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth(), email, password);
-  }, []);
-
-  const signUp = useCallback(async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth(), email, password);
-  }, []);
-
-  const signInWithGoogle = useCallback(async () => {
-    await signInWithPopup(auth(), googleProvider());
-  }, []);
-
-  const signOut = useCallback(async () => {
-    await firebaseSignOut(auth());
-  }, []);
-
-  const value = useMemo(
-    () => ({ user, loading, signIn, signUp, signInWithGoogle, signOut }),
-    [user, loading, signIn, signUp, signInWithGoogle, signOut]
+  const value = useMemo<AuthContextType>(
+    () => ({
+      user: null,
+      loading: false,
+      signIn: notConfigured,
+      signUp: notConfigured,
+      signInWithGoogle: notConfigured,
+      signOut: notConfigured,
+    }),
+    []
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
