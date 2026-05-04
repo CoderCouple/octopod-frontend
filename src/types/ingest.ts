@@ -228,6 +228,11 @@ export interface PipelineExecution {
   steps?: PipelineStep[];
 }
 
+export interface JobControlResult {
+  job_id: string;
+  control_signal: string;
+}
+
 export interface PipelineControlResult {
   execution_id: string;
   control_signal?: string;

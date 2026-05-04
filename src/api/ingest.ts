@@ -10,6 +10,7 @@ import type {
   IngestJobDetail,
   IngestJobItem,
   IngestStatus,
+  JobControlResult,
   JobData,
   JobListParams,
   JobStartResult,
@@ -97,6 +98,24 @@ export function listJobs(params?: JobListParams) {
 
 export function getJob(jobId: string) {
   return request<IngestJobDetail>(`/ingest/jobs/${jobId}`);
+}
+
+export function pauseJob(jobId: string) {
+  return request<JobControlResult>(`/ingest/jobs/${jobId}/pause`, {
+    method: "POST",
+  });
+}
+
+export function resumeJob(jobId: string) {
+  return request<JobControlResult>(`/ingest/jobs/${jobId}/resume`, {
+    method: "POST",
+  });
+}
+
+export function cancelJob(jobId: string) {
+  return request<JobControlResult>(`/ingest/jobs/${jobId}/cancel`, {
+    method: "POST",
+  });
 }
 
 export function getJobItems(
