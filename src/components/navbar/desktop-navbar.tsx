@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -67,20 +68,22 @@ export const DesktopNavbar = ({ navItems }: Props) => {
       </div>
       <div className="flex items-center space-x-2">
         <ModeToggle />
-        <button
+        <Link
+          href="/login"
           className={cn(
             "relative z-10 flex items-center justify-center rounded-full border border-transparent bg-transparent px-4 py-2 text-sm font-medium transition duration-200 hover:bg-primary/10 dark:text-white dark:hover:bg-neutral-800 dark:hover:shadow-xl md:text-sm"
           )}
         >
           Sign In
-        </button>
-        <button
+        </Link>
+        <Link
+          href="/signup"
           className={cn(
             "relative z-10 flex items-center justify-center rounded-full border border-transparent bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0px_-1px_0px_0px_#FFFFFF40_inset,_0px_1px_0px_0px_#FFFFFF40_inset] transition duration-200 hover:bg-primary/90 md:text-sm"
           )}
         >
           Sign Up
-        </button>
+        </Link>
       </div>
     </div>
   );

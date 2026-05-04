@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { Lock } from "lucide-react";
@@ -20,6 +20,8 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const { signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,9 +31,11 @@ export function LoginForm({
     setIsLoading(true);
     try {
       await signIn(email, password);
-      router.push("/dashboard");
-    } catch {
-      toast.error("Invalid email or password");
+      router.push(redirectTo);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Invalid email or password";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -41,9 +45,11 @@ export function LoginForm({
     setIsLoading(true);
     try {
       await signInWithGoogle();
-      router.push("/dashboard");
-    } catch {
-      toast.error("Google sign-in failed");
+      router.push(redirectTo);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Google sign-in failed";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

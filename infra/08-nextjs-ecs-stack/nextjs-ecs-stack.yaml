@@ -222,6 +222,15 @@ Resources:
               Value: !If [IsProd, "https://api.octopodai.app/api/v1", "https://api.octopodai.app/api/v1"]
             - Name: NEXT_PUBLIC_APP_URL
               Value: !If [IsProd, "https://octopodai.app", "https://web.octopodai.app"]
+            - Name: NEXT_PUBLIC_COGNITO_USER_POOL_ID
+              Value: !ImportValue
+                'Fn::Sub': 'octopod-cognito-UserPoolId'
+            - Name: NEXT_PUBLIC_COGNITO_CLIENT_ID
+              Value: !ImportValue
+                'Fn::Sub': 'octopod-cognito-FrontendAppClientId'
+            - Name: NEXT_PUBLIC_COGNITO_REGION
+              Value: !ImportValue
+                'Fn::Sub': 'octopod-cognito-CognitoRegion'
             - Name: SKIP_ENV_VALIDATION
               Value: "1"
             - Name: PORT

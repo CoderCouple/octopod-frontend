@@ -19,7 +19,14 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
+      - >-
+        docker build
+        --build-arg NEXT_PUBLIC_COGNITO_USER_POOL_ID=us-west-2_2ItztMsVz
+        --build-arg NEXT_PUBLIC_COGNITO_CLIENT_ID=19cg46ef56rq0iso5b9vet3ubf
+        --build-arg NEXT_PUBLIC_COGNITO_REGION=us-west-2
+        --build-arg NEXT_PUBLIC_INGEST_API_URL=https://api.octopodai.app/api/v1
+        --build-arg NEXT_PUBLIC_APP_URL=https://octopodai.app
+        -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:

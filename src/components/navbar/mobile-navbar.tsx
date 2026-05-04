@@ -65,20 +65,24 @@ export const MobileNavbar = ({ navItems }: any) => {
             ))}
           </div>
           <div className="flex w-full flex-row items-start gap-2.5 px-8 py-4">
-            <button
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
               className={cn(
                 "relative z-10 flex items-center justify-center rounded-full border border-transparent bg-transparent px-4 py-2 text-sm font-medium text-black transition duration-200 hover:bg-primary/10 dark:text-white dark:hover:bg-neutral-800 dark:hover:shadow-xl md:text-sm"
               )}
             >
               Sign In
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/signup"
+              onClick={() => setOpen(false)}
               className={cn(
                 "relative z-10 flex items-center justify-center rounded-full border border-transparent bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-[0px_-1px_0px_0px_#FFFFFF40_inset,_0px_1px_0px_0px_#FFFFFF40_inset] transition duration-200 hover:bg-primary/90 md:text-sm"
               )}
             >
               Sign Up
-            </button>
+            </Link>
           </div>
         </div>
       )}

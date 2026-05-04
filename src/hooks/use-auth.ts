@@ -7,6 +7,8 @@ import {
   type AuthContextType,
 } from "@/components/provider/auth-provider";
 
+export type { AuthContextType };
+
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {

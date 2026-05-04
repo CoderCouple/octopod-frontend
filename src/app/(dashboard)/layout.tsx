@@ -1,3 +1,8 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 import { BreadcrumbHeader } from "@/components/breadcrumb-header";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { ModeToggle } from "@/components/theme-mode-toggle";
@@ -7,34 +12,29 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-// Auth guard — uncomment when enabling login
-// "use client";
-// import { useRouter } from "next/navigation";
-// import { useEffect } from "react";
-// import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // const { user, loading } = useAuth();
-  // const router = useRouter();
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!loading && !user) {
-  //     router.replace("/login");
-  //   }
-  // }, [user, loading, router]);
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+    }
+  }, [user, loading, router]);
 
-  // if (loading || !user) {
-  //   return (
-  //     <div className="flex h-screen items-center justify-center">
-  //       <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
-  //     </div>
-  //   );
-  // }
+  if (loading || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>
