@@ -17,9 +17,13 @@ export interface RetryResult {
 }
 
 export interface SourceCounts {
-  success: number;
+  discovered?: number;
+  ingested?: number;
   failed: number;
+  /** @deprecated backend now uses "discovered" */
   pending?: number;
+  /** @deprecated backend now uses "ingested" */
+  success?: number;
 }
 
 export interface RecentJob {

@@ -161,8 +161,12 @@ export default function IngestorPage() {
         top: Number(ghTop),
         alpha: Number(ghAlpha),
       });
-      toast.success(`GitHub discovery started: ${res.job_id}`);
-      startPolling();
+      if (res.status === "skipped") {
+        toast.info("GitHub discovery skipped — org was recently fetched");
+      } else {
+        toast.success(`GitHub discovery started: ${res.job_id}`);
+        startPolling();
+      }
       refetch();
     } catch (err) {
       toast.error(
@@ -180,8 +184,12 @@ export default function IngestorPage() {
         top: Number(hfTop),
         alpha: Number(hfAlpha),
       });
-      toast.success(`HuggingFace discovery started: ${res.job_id}`);
-      startPolling();
+      if (res.status === "skipped") {
+        toast.info("HuggingFace discovery skipped — org was recently fetched");
+      } else {
+        toast.success(`HuggingFace discovery started: ${res.job_id}`);
+        startPolling();
+      }
       refetch();
     } catch (err) {
       toast.error(
@@ -342,15 +350,19 @@ export default function IngestorPage() {
             ) : (
               <div className="flex items-center justify-between">
                 <StatNumber
-                  value={status?.github.success ?? 0}
-                  label="Success"
+                  value={
+                    status?.github.ingested ?? status?.github.success ?? 0
+                  }
+                  label="Ingested"
                 />
                 <Separator orientation="vertical" className="h-10" />
                 <StatNumber value={status?.github.failed ?? 0} label="Failed" />
                 <Separator orientation="vertical" className="h-10" />
                 <StatNumber
-                  value={status?.github.pending ?? 0}
-                  label="Pending"
+                  value={
+                    status?.github.discovered ?? status?.github.pending ?? 0
+                  }
+                  label="Discovered"
                 />
               </div>
             )}
@@ -373,8 +385,12 @@ export default function IngestorPage() {
             ) : (
               <div className="flex items-center justify-between">
                 <StatNumber
-                  value={status?.huggingface.success ?? 0}
-                  label="Success"
+                  value={
+                    status?.huggingface.ingested ??
+                    status?.huggingface.success ??
+                    0
+                  }
+                  label="Ingested"
                 />
                 <Separator orientation="vertical" className="h-10" />
                 <StatNumber
@@ -383,8 +399,12 @@ export default function IngestorPage() {
                 />
                 <Separator orientation="vertical" className="h-10" />
                 <StatNumber
-                  value={status?.huggingface.pending ?? 0}
-                  label="Pending"
+                  value={
+                    status?.huggingface.discovered ??
+                    status?.huggingface.pending ??
+                    0
+                  }
+                  label="Discovered"
                 />
               </div>
             )}
