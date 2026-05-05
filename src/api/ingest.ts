@@ -15,6 +15,8 @@ import type {
   JobListParams,
   JobStartResult,
   LinkedInRunParams,
+  ManualIngestParams,
+  ManualIngestResponse,
   MergeCandidate,
   MergeCandidateDetail,
   MergeCandidateResult,
@@ -45,6 +47,21 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   }
   const json = (await res.json()) as ApiResponse<T>;
   return json.result;
+}
+
+export async function ingestManualProfile(
+  params: ManualIngestParams
+): Promise<ManualIngestResponse> {
+  const res = await authFetch(`${BASE_URL}/ingest/profile`, {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify(params),
+  });
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+  }
+  const json = (await res.json()) as { data: ManualIngestResponse };
+  return json.data;
 }
 
 export function discoverGitHub(params: DiscoverParams) {

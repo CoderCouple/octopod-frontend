@@ -17,6 +17,7 @@ import {
   Search,
   Sparkles,
   TrendingUp,
+  UserPlus,
   XCircle,
   Zap,
 } from "lucide-react";
@@ -28,6 +29,7 @@ import {
   discoverHuggingFace,
   ingestGitHub,
   ingestHuggingFace,
+  ingestManualProfile,
   pauseJob,
   resumeJob,
   retryFailed,
@@ -151,6 +153,12 @@ export default function IngestorPage() {
   const [hfLogins, setHfLogins] = useState("");
   const [hfIngesting, setHfIngesting] = useState(false);
 
+  const [manualName, setManualName] = useState("");
+  const [manualGithub, setManualGithub] = useState("");
+  const [manualHuggingface, setManualHuggingface] = useState("");
+  const [manualLinkedin, setManualLinkedin] = useState("");
+  const [manualIngesting, setManualIngesting] = useState(false);
+
   const [retrying, setRetrying] = useState(false);
   const [selectedJob, setSelectedJob] = useState<RecentJob | null>(null);
 
@@ -245,6 +253,38 @@ export default function IngestorPage() {
       );
     } finally {
       setHfIngesting(false);
+    }
+  }
+
+  async function handleManualIngest() {
+    const github_username = manualGithub.trim() || undefined;
+    const huggingface_username = manualHuggingface.trim() || undefined;
+    const linkedin_url = manualLinkedin.trim() || undefined;
+    if (!github_username && !huggingface_username && !linkedin_url) {
+      toast.error("Provide at least one platform identifier");
+      return;
+    }
+    setManualIngesting(true);
+    try {
+      const res = await ingestManualProfile({
+        name: manualName.trim() || undefined,
+        github_username,
+        huggingface_username,
+        linkedin_url,
+      });
+      toast.success(`Manual ingestion started: ${res.job_id}`);
+      startPolling();
+      refetch();
+      setManualName("");
+      setManualGithub("");
+      setManualHuggingface("");
+      setManualLinkedin("");
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to start manual ingestion"
+      );
+    } finally {
+      setManualIngesting(false);
     }
   }
 
@@ -457,7 +497,7 @@ export default function IngestorPage() {
                   Trigger discovery and ingestion pipelines.
                 </CardDescription>
               </div>
-              <TabsList className="grid w-[240px] grid-cols-2">
+              <TabsList className="grid w-[360px] grid-cols-3">
                 <TabsTrigger value="github" className="gap-1.5">
                   <Github className="size-3.5" />
                   GitHub
@@ -465,6 +505,10 @@ export default function IngestorPage() {
                 <TabsTrigger value="huggingface" className="gap-1.5">
                   <Sparkles className="size-3.5" />
                   HuggingFace
+                </TabsTrigger>
+                <TabsTrigger value="manual" className="gap-1.5">
+                  <UserPlus className="size-3.5" />
+                  Manual
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -680,6 +724,99 @@ export default function IngestorPage() {
                       <Play className="mr-2 size-3.5" />
                     )}
                     Start Ingestion
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="manual" className="m-0 space-y-6">
+              <div className="rounded-lg border bg-muted/30 p-5">
+                <div className="mb-4 flex items-center gap-2">
+                  <div className="flex size-7 items-center justify-center rounded-md bg-purple-100 dark:bg-purple-900">
+                    <UserPlus className="size-3.5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold">
+                      Manual Profile Ingestion
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Ingest a single profile by name and platform links
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label
+                      htmlFor="manual-name"
+                      className="text-xs text-muted-foreground"
+                    >
+                      Name
+                    </Label>
+                    <Input
+                      id="manual-name"
+                      placeholder="John Doe"
+                      value={manualName}
+                      onChange={(e) => setManualName(e.target.value)}
+                      className="h-9"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label
+                      htmlFor="manual-github"
+                      className="text-xs text-muted-foreground"
+                    >
+                      GitHub username or URL
+                    </Label>
+                    <Input
+                      id="manual-github"
+                      placeholder="torvalds or https://github.com/torvalds"
+                      value={manualGithub}
+                      onChange={(e) => setManualGithub(e.target.value)}
+                      className="h-9"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label
+                      htmlFor="manual-huggingface"
+                      className="text-xs text-muted-foreground"
+                    >
+                      HuggingFace username or URL
+                    </Label>
+                    <Input
+                      id="manual-huggingface"
+                      placeholder="bigscience or https://huggingface.co/bigscience"
+                      value={manualHuggingface}
+                      onChange={(e) => setManualHuggingface(e.target.value)}
+                      className="h-9"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label
+                      htmlFor="manual-linkedin"
+                      className="text-xs text-muted-foreground"
+                    >
+                      LinkedIn username or URL
+                    </Label>
+                    <Input
+                      id="manual-linkedin"
+                      placeholder="suniltiwari or https://www.linkedin.com/in/suniltiwari"
+                      value={manualLinkedin}
+                      onChange={(e) => setManualLinkedin(e.target.value)}
+                      className="h-9"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleManualIngest}
+                    disabled={manualIngesting}
+                    size="sm"
+                    className="bg-gradient-to-r from-purple-600 to-purple-500 shadow-md shadow-purple-500/20 hover:from-purple-700 hover:to-purple-600"
+                  >
+                    {manualIngesting ? (
+                      <Loader2 className="mr-2 size-3.5 animate-spin" />
+                    ) : (
+                      <UserPlus className="mr-2 size-3.5" />
+                    )}
+                    Ingest Profile
                   </Button>
                 </div>
               </div>

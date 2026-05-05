@@ -97,6 +97,18 @@ export interface IngestJobItem {
   updated_at: string;
 }
 
+export interface ManualIngestParams {
+  name?: string;
+  github_username?: string;
+  huggingface_username?: string;
+  linkedin_url?: string;
+}
+
+export interface ManualIngestResponse {
+  job_id: string;
+  status: string;
+}
+
 export interface DiscoverParams {
   top?: number;
   alpha?: number;
