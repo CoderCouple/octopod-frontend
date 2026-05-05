@@ -4,11 +4,13 @@ import { useState } from "react";
 
 import {
   Activity,
+  Ban,
   CheckCircle2,
   Clock,
   Download,
   Github,
   Loader2,
+  Pause,
   Play,
   RefreshCw,
   RotateCcw,
@@ -21,10 +23,13 @@ import {
 import { toast } from "sonner";
 
 import {
+  cancelJob,
   discoverGitHub,
   discoverHuggingFace,
   ingestGitHub,
   ingestHuggingFace,
+  pauseJob,
+  resumeJob,
   retryFailed,
 } from "@/api/ingest";
 import { Badge } from "@/components/ui/badge";
@@ -61,6 +66,13 @@ function StatusBadge({ status }: { status: RecentJob["status"] }) {
         <Badge className="border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">
           <Loader2 className="mr-1 size-3 animate-spin" />
           running
+        </Badge>
+      );
+    case "paused":
+      return (
+        <Badge className="border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-300">
+          <Pause className="mr-1 size-3" />
+          paused
         </Badge>
       );
     case "failed":
@@ -239,6 +251,25 @@ export default function IngestorPage() {
       toast.error(err instanceof Error ? err.message : "Failed to retry jobs");
     } finally {
       setRetrying(false);
+    }
+  }
+
+  async function handleJobAction(
+    jobId: string,
+    action: "pause" | "resume" | "cancel"
+  ) {
+    try {
+      if (action === "pause") await pauseJob(jobId);
+      else if (action === "resume") await resumeJob(jobId);
+      else await cancelJob(jobId);
+      toast.success(
+        `Job ${action === "pause" ? "paused" : action === "resume" ? "resumed" : "cancelled"}`
+      );
+      refetch();
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : `Failed to ${action} job`
+      );
     }
   }
 
@@ -694,11 +725,13 @@ export default function IngestorPage() {
                       className={`size-2 rounded-full ${
                         job.status === "running"
                           ? "animate-pulse bg-blue-500"
-                          : job.status === "completed"
-                            ? "bg-green-500"
-                            : job.status === "failed"
-                              ? "bg-red-500"
-                              : "bg-muted-foreground"
+                          : job.status === "paused"
+                            ? "bg-amber-500"
+                            : job.status === "completed"
+                              ? "bg-green-500"
+                              : job.status === "failed"
+                                ? "bg-red-500"
+                                : "bg-muted-foreground"
                       }`}
                     />
                     <div>
@@ -715,6 +748,45 @@ export default function IngestorPage() {
                       <span className="text-xs text-muted-foreground">
                         {job.succeeded_count}/{job.total_items} items
                       </span>
+                    )}
+                    {(job.status === "running" ||
+                      job.status === "paused") && (
+                      <div
+                        className="flex items-center gap-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {job.status === "running" && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-7"
+                            title="Pause job"
+                            onClick={() => handleJobAction(job.id, "pause")}
+                          >
+                            <Pause className="size-3.5 text-amber-600" />
+                          </Button>
+                        )}
+                        {job.status === "paused" && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-7"
+                            title="Resume job"
+                            onClick={() => handleJobAction(job.id, "resume")}
+                          >
+                            <Play className="size-3.5 text-green-600" />
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-7"
+                          title="Cancel job"
+                          onClick={() => handleJobAction(job.id, "cancel")}
+                        >
+                          <Ban className="size-3.5 text-red-600" />
+                        </Button>
+                      </div>
                     )}
                     <StatusBadge status={job.status} />
                     <span className="min-w-[60px] text-right text-xs text-muted-foreground">

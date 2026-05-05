@@ -26,7 +26,13 @@ export interface RecentJob {
   id: string;
   job_type: string;
   platform: "github" | "huggingface";
-  status: "pending" | "running" | "completed" | "failed" | "cancelled";
+  status:
+    | "pending"
+    | "running"
+    | "paused"
+    | "completed"
+    | "failed"
+    | "cancelled";
   started_at: string;
   completed_at?: string | null;
   total_items: number;
