@@ -1,10 +1,12 @@
-export function getInitials(name: string) {
+export function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
+    .filter(Boolean)
     .map((n) => n[0])
     .join("")
     .toUpperCase()
-    .slice(0, 2);
+    .slice(0, 2) || "?";
 }
 
 export function scoreLabel(score: number): {

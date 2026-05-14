@@ -1,5 +1,11 @@
 import { authFetch } from "@/lib/api-client";
-import type { BillingInfo, CheckoutResponse, PortalResponse } from "@/types/billing";
+import type {
+  BillingInfo,
+  CheckoutResponse,
+  Invoice,
+  PortalResponse,
+  UsageStats,
+} from "@/types/billing";
 
 const BASE_URL =
   // eslint-disable-next-line n/no-process-env
@@ -51,4 +57,12 @@ export async function createPortalSession(
     method: "POST",
     body: JSON.stringify({ return_url: returnUrl }),
   });
+}
+
+export async function getUsage(): Promise<UsageStats> {
+  return request<UsageStats>("/billing/usage");
+}
+
+export async function listInvoices(): Promise<Invoice[]> {
+  return request<Invoice[]>("/billing/invoices");
 }

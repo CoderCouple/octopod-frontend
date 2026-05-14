@@ -39,6 +39,34 @@ export interface PlanTier {
   featured?: boolean;
 }
 
+// --- Usage + Invoices ---
+
+export interface UsageItem {
+  key: string;
+  label: string;
+  used: number;
+  limit: number;
+}
+
+export interface UsageStats {
+  plan: string;
+  items: UsageItem[];
+}
+
+export interface Invoice {
+  id: string;
+  number: string | null;
+  status: string;
+  amount_paid: number;
+  amount_due: number;
+  currency: string;
+  created: number;
+  period_start: number | null;
+  period_end: number | null;
+  hosted_invoice_url: string | null;
+  invoice_pdf: string | null;
+}
+
 export const PLAN_TIERS: PlanTier[] = [
   {
     name: "free",

@@ -19,13 +19,13 @@ export interface SearchRequest {
 }
 
 export interface DeveloperProfile {
-  display_name: string;
-  bio: string;
-  headline: string;
-  location: string;
-  avatar_url: string;
-  company: string;
-  website: string;
+  display_name: string | null;
+  bio: string | null;
+  headline: string | null;
+  location: string | null;
+  avatar_url: string | null;
+  company: string | null;
+  website: string | null;
   total_repos: number;
   total_stars: number;
   total_contributions: number;
@@ -38,10 +38,10 @@ export interface DeveloperProfile {
   languages: string[];
   skills: string[];
   topics: string[];
-  years_of_experience: number;
-  current_title: string;
-  current_company: string;
-  source_priority: string;
+  years_of_experience: number | null;
+  current_title: string | null;
+  current_company: string | null;
+  source_priority: string | Record<string, string>;
   merged_at: string;
 }
 

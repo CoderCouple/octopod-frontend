@@ -19,7 +19,10 @@ export function DeveloperListItem({ result }: { result: SearchResult }) {
         {/* DEVELOPER column */}
         <div className="flex items-start gap-3">
           <Avatar className="size-11 shrink-0">
-            <AvatarImage src={profile.avatar_url} alt={profile.display_name} />
+            <AvatarImage
+              src={profile.avatar_url ?? undefined}
+              alt={profile.display_name ?? "Avatar"}
+            />
             <AvatarFallback>{getInitials(profile.display_name)}</AvatarFallback>
           </Avatar>
 
@@ -48,7 +51,7 @@ export function DeveloperListItem({ result }: { result: SearchResult }) {
               </p>
             )}
 
-            {profile.years_of_experience > 0 && (
+            {(profile.years_of_experience ?? 0) > 0 && (
               <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="size-3" />
                 {profile.years_of_experience}y experience

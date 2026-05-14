@@ -46,12 +46,13 @@ export function DeveloperProfileCard({ result }: { result: SearchResult }) {
     profile.total_hf_datasets > 0 ||
     profile.total_hf_downloads > 0;
 
+  const yoe = profile.years_of_experience ?? 0;
   const levelLabel =
-    profile.years_of_experience >= 8
+    yoe >= 8
       ? "SENIOR LEVEL"
-      : profile.years_of_experience >= 4
+      : yoe >= 4
         ? "MID LEVEL"
-        : profile.years_of_experience > 0
+        : yoe > 0
           ? "JUNIOR LEVEL"
           : null;
 
@@ -63,8 +64,8 @@ export function DeveloperProfileCard({ result }: { result: SearchResult }) {
           <div className="flex shrink-0 flex-col items-center gap-3">
             <Avatar className="size-20">
               <AvatarImage
-                src={profile.avatar_url}
-                alt={profile.display_name}
+                src={profile.avatar_url ?? undefined}
+                alt={profile.display_name ?? "Avatar"}
               />
               <AvatarFallback className="text-xl">
                 {getInitials(profile.display_name)}
@@ -125,20 +126,22 @@ export function DeveloperProfileCard({ result }: { result: SearchResult }) {
                     </a>
                   </Button>
                 )}
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="size-8"
-                  asChild
-                >
-                  <a
-                    href={`https://github.com/${profile.display_name.replace(/\s+/g, "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                {profile.display_name && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="size-8"
+                    asChild
                   >
-                    <Github className="size-3.5" />
-                  </a>
-                </Button>
+                    <a
+                      href={`https://github.com/${profile.display_name.replace(/\s+/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Github className="size-3.5" />
+                    </a>
+                  </Button>
+                )}
               </div>
             </div>
 
