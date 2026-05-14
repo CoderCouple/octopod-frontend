@@ -54,8 +54,9 @@ const navMain = [
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings/billing",
     icon: Settings2,
+    items: [{ title: "Billing & Plans", url: "/settings/billing" }],
   },
 ];
 

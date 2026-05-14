@@ -5,10 +5,13 @@ import { useState } from "react";
 import {
   Activity,
   Ban,
+  Boxes,
   CheckCircle2,
   Clock,
+  Database,
   Download,
   Github,
+  Layers,
   Loader2,
   Pause,
   Play,
@@ -33,6 +36,8 @@ import {
   pauseJob,
   resumeJob,
   retryFailed,
+  runEmbed,
+  runSync,
 } from "@/api/ingest";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -161,6 +166,37 @@ export default function IngestorPage() {
 
   const [retrying, setRetrying] = useState(false);
   const [selectedJob, setSelectedJob] = useState<RecentJob | null>(null);
+
+  const [syncing, setSyncing] = useState(false);
+  const [embedding, setEmbedding] = useState(false);
+
+  async function handleSync() {
+    setSyncing(true);
+    try {
+      const res = await runSync({ platform: "full", since_hours: 720 });
+      toast.success(`Bridge sync started: ${res.job_id}`);
+      startPolling();
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to start sync");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
+  async function handleEmbed() {
+    setEmbedding(true);
+    try {
+      const res = await runEmbed({ batch_size: 200, include_opensearch: true });
+      toast.success(`Embed started: ${res.job_id}`);
+      startPolling();
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to start embed");
+    } finally {
+      setEmbedding(false);
+    }
+  }
 
   async function handleGhDiscover() {
     setGhDiscovering(true);
@@ -823,6 +859,81 @@ export default function IngestorPage() {
             </TabsContent>
           </CardContent>
         </Tabs>
+      </Card>
+
+      {/* Build Search Index */}
+      <Card>
+        <CardHeader>
+          <div className="space-y-1">
+            <CardTitle className="flex items-center gap-2">
+              <Database className="size-4 text-green-600" />
+              Build Search Index
+            </CardTitle>
+            <CardDescription>
+              After ingestion, link identities and build embeddings so /search
+              finds the new profiles.
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-lg border bg-muted/30 p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <div className="flex size-7 items-center justify-center rounded-md bg-blue-100 dark:bg-blue-900">
+                  <Layers className="size-3.5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold">1. Bridge Sync</h3>
+                  <p className="text-xs text-muted-foreground">
+                    raw → domain → aggregated → cohesive (links GH ↔ HF
+                    identities)
+                  </p>
+                </div>
+              </div>
+              <Button
+                onClick={handleSync}
+                disabled={syncing}
+                size="sm"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 shadow-md shadow-blue-500/20 hover:from-blue-700 hover:to-blue-600"
+              >
+                {syncing ? (
+                  <Loader2 className="mr-2 size-3.5 animate-spin" />
+                ) : (
+                  <Layers className="mr-2 size-3.5" />
+                )}
+                Run Bridge Sync
+              </Button>
+            </div>
+
+            <div className="rounded-lg border bg-muted/30 p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <div className="flex size-7 items-center justify-center rounded-md bg-green-100 dark:bg-green-900">
+                  <Boxes className="size-3.5 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold">2. Embed All</h3>
+                  <p className="text-xs text-muted-foreground">
+                    push cohesive profiles to Qdrant + OpenSearch (search needs
+                    this)
+                  </p>
+                </div>
+              </div>
+              <Button
+                onClick={handleEmbed}
+                disabled={embedding}
+                size="sm"
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-500 shadow-md shadow-green-500/20 hover:from-green-700 hover:to-emerald-600"
+              >
+                {embedding ? (
+                  <Loader2 className="mr-2 size-3.5 animate-spin" />
+                ) : (
+                  <Boxes className="mr-2 size-3.5" />
+                )}
+                Embed All Profiles
+              </Button>
+            </div>
+          </div>
+        </CardContent>
       </Card>
 
       {/* Recent Jobs */}

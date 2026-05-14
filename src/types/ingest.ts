@@ -186,7 +186,9 @@ export interface LinkedInRunParams {
 // --- Bridge Sync ---
 
 export interface SyncParams {
-  platform?: "all" | "gh_only" | "hf_only" | "ln_only";
+  // Backend orchestrator accepts: full | recent | gh_only | hf_only | ln_only
+  // ("all" was wrong — silently no-ops)
+  platform?: "full" | "recent" | "gh_only" | "hf_only" | "ln_only";
   since_hours?: number;
 }
 

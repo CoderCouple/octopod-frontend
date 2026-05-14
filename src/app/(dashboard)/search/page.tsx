@@ -9,6 +9,7 @@ import {
   List,
   Plus,
   SearchIcon,
+  Sparkles,
   SquareUser,
   User,
 } from "lucide-react";
@@ -19,11 +20,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { SearchResult } from "@/types/search";
+import type { SearchFilters, SearchResult } from "@/types/search";
 
 import { DeveloperListItem } from "./developer-list-item";
 import { DeveloperProfileCard } from "./developer-profile-card";
 import { type FilterCategory, FilterPills } from "./filter-pills";
+import { SearchFiltersSheet } from "./search-filters-sheet";
 
 const quickPills = [
   { label: "Skills", icon: Code, template: "Developer skilled in " },
@@ -64,6 +66,8 @@ export default function SearchPage() {
   const [searching, setSearching] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "profile">("list");
   const [activeFilters, setActiveFilters] = useState<FilterCategory[]>([]);
+  const [filters, setFilters] = useState<SearchFilters>({});
+  const [rerank, setRerank] = useState(true);
 
   async function handleSearch(searchQuery?: string) {
     const q = searchQuery ?? query;
@@ -71,7 +75,11 @@ export default function SearchPage() {
 
     setSearching(true);
     try {
-      const data = await searchDevelopers({ query: q.trim() });
+      const data = await searchDevelopers({
+        query: q.trim(),
+        filters: Object.keys(filters).length > 0 ? filters : undefined,
+        rerank,
+      });
       setResults(data);
     } catch {
       setResults([]);
@@ -84,6 +92,7 @@ export default function SearchPage() {
     setQuery("");
     setResults(null);
     setActiveFilters([]);
+    setFilters({});
   }
 
   function toggleFilter(filter: FilterCategory) {
@@ -161,6 +170,16 @@ export default function SearchPage() {
             }}
           />
         </div>
+        <SearchFiltersSheet filters={filters} onChange={setFilters} />
+        <Button
+          variant={rerank ? "default" : "outline"}
+          className={`shrink-0 ${rerank ? "bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600" : ""}`}
+          onClick={() => setRerank((v) => !v)}
+          title={rerank ? "Cohere rerank: on (better ranking)" : "Cohere rerank: off (faster, fusion-only)"}
+        >
+          <Sparkles className="mr-1.5 size-4" />
+          Rerank {rerank ? "on" : "off"}
+        </Button>
         <Button
           variant="outline"
           className="shrink-0 text-green-600 hover:text-green-700 dark:text-green-400"

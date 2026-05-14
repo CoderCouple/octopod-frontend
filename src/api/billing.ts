@@ -1,5 +1,5 @@
 import { authFetch } from "@/lib/api-client";
-import type { SearchRequest, SearchResult } from "@/types/search";
+import type { BillingInfo, CheckoutResponse, PortalResponse } from "@/types/billing";
 
 const BASE_URL =
   // eslint-disable-next-line n/no-process-env
@@ -25,9 +25,30 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return json.result;
 }
 
-export function searchDevelopers(params: SearchRequest) {
-  return request<SearchResult[]>("/developer-profile/search", {
+export async function getBillingInfo(): Promise<BillingInfo> {
+  return request<BillingInfo>("/billing");
+}
+
+export async function createCheckoutSession(
+  plan: string,
+  successUrl: string,
+  cancelUrl: string
+): Promise<CheckoutResponse> {
+  return request<CheckoutResponse>("/billing/checkout", {
     method: "POST",
-    body: JSON.stringify(params),
+    body: JSON.stringify({
+      plan,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    }),
+  });
+}
+
+export async function createPortalSession(
+  returnUrl: string
+): Promise<PortalResponse> {
+  return request<PortalResponse>("/billing/portal", {
+    method: "POST",
+    body: JSON.stringify({ return_url: returnUrl }),
   });
 }
