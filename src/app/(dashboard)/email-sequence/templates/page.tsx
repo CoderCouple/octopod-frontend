@@ -2,10 +2,24 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { FileText, Loader2, Tag } from "lucide-react";
+import {
+  Eye,
+  FileText,
+  Loader2,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Tag,
+  Trash2,
+} from "lucide-react";
+import { toast } from "sonner";
 
-import { listEmailTemplates } from "@/api/email-sequence";
+import {
+  deleteEmailTemplate,
+  listEmailTemplates,
+} from "@/api/email-sequence";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,69 +27,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { EmailTemplate } from "@/types/email-sequence";
 
-const FALLBACK_TEMPLATES: EmailTemplate[] = [
-  {
-    id: "etpl_1",
-    owner_id: "",
-    name: "Cold Outreach v1",
-    category: "outreach",
-    subject: "Hi {{first_name}}, quick question",
-    body_html: "<p>Hi {{first_name}},</p><p>I noticed you're at {{company}}...</p>",
-    body_text: null,
-    variables: ["first_name", "company"],
-    metadata: {},
-    is_deleted: false,
-    created_by: null,
-    updated_by: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "etpl_2",
-    owner_id: "",
-    name: "Follow-up Nudge",
-    category: "follow-up",
-    subject: "Re: {{first_name}}, circling back",
-    body_html: "<p>Hi {{first_name}},</p><p>Just wanted to follow up on my previous email...</p>",
-    body_text: null,
-    variables: ["first_name"],
-    metadata: {},
-    is_deleted: false,
-    created_by: null,
-    updated_by: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "etpl_3",
-    owner_id: "",
-    name: "Event Invite",
-    category: "events",
-    subject: "{{first_name}}, you're invited",
-    body_html: "<p>Hi {{first_name}},</p><p>We'd love to have you at our upcoming event...</p>",
-    body_text: null,
-    variables: ["first_name", "company"],
-    metadata: {},
-    is_deleted: false,
-    created_by: null,
-    updated_by: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
+import { TemplateDialog } from "./template-dialog";
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<EmailTemplate | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [previewing, setPreviewing] = useState<EmailTemplate | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchTemplates = useCallback(async () => {
     try {
       const data = await listEmailTemplates();
       setTemplates(data.items);
-    } catch {
-      setTemplates(FALLBACK_TEMPLATES);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to load templates");
+      setTemplates([]);
     } finally {
       setLoading(false);
     }
@@ -85,21 +69,44 @@ export default function TemplatesPage() {
     fetchTemplates();
   }, [fetchTemplates]);
 
+  async function handleDelete(tpl: EmailTemplate) {
+    if (!confirm(`Delete template "${tpl.name}"?`)) return;
+    setDeletingId(tpl.id);
+    try {
+      await deleteEmailTemplate(tpl.id);
+      toast.success("Template deleted");
+      fetchTemplates();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to delete");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/20">
-            <FileText className="size-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Templates</h1>
-            <p className="text-sm text-muted-foreground">
-              Reusable email templates for your campaigns.
-            </p>
+      <div className="flex items-start justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/20">
+              <FileText className="size-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Templates</h1>
+              <p className="text-sm text-muted-foreground">
+                Reusable email templates for your campaigns.
+              </p>
+            </div>
           </div>
         </div>
+        <Button
+          onClick={() => setCreating(true)}
+          className="bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600"
+        >
+          <Plus className="mr-2 size-4" />
+          New template
+        </Button>
       </div>
 
       {/* Template Grid */}
@@ -107,19 +114,60 @@ export default function TemplatesPage() {
         <div className="flex items-center justify-center py-20">
           <Loader2 className="size-6 animate-spin text-muted-foreground" />
         </div>
+      ) : templates.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+          <FileText className="size-6 text-muted-foreground" />
+          <p className="mt-3 text-sm font-medium text-muted-foreground">
+            No templates yet
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Click &quot;New template&quot; to create your first reusable email.
+          </p>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {templates.map((tpl) => (
             <Card
               key={tpl.id}
-              className="group cursor-pointer transition-colors hover:border-green-300 hover:shadow-md dark:hover:border-green-700"
+              className="group transition-colors hover:border-green-300 hover:shadow-md dark:hover:border-green-700"
             >
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <CardTitle className="text-base">{tpl.name}</CardTitle>
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-green-50 dark:bg-green-950">
-                    <FileText className="size-4 text-green-600 dark:text-green-400" />
-                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-7 opacity-0 group-hover:opacity-100"
+                        disabled={deletingId === tpl.id}
+                      >
+                        {deletingId === tpl.id ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <MoreHorizontal className="size-4" />
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-36">
+                      <DropdownMenuItem onClick={() => setPreviewing(tpl)}>
+                        <Eye className="mr-2 size-3.5" />
+                        Preview
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setEditing(tpl)}>
+                        <Pencil className="mr-2 size-3.5" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(tpl)}
+                        className="text-red-600 focus:text-red-700"
+                      >
+                        <Trash2 className="mr-2 size-3.5" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
                 <CardDescription className="line-clamp-2">
                   {tpl.subject}
@@ -145,6 +193,46 @@ export default function TemplatesPage() {
           ))}
         </div>
       )}
+
+      <TemplateDialog
+        open={creating || editing !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setCreating(false);
+            setEditing(null);
+          }
+        }}
+        template={editing}
+        onSaved={fetchTemplates}
+      />
+
+      {/* Preview dialog */}
+      <Dialog open={previewing !== null} onOpenChange={(o) => !o && setPreviewing(null)}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{previewing?.name}</DialogTitle>
+            <DialogDescription>{previewing?.subject}</DialogDescription>
+          </DialogHeader>
+          {previewing && (
+            <div className="space-y-3">
+              {previewing.variables.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {previewing.variables.map((v) => (
+                    <Badge key={v} variant="outline" className="text-xs">
+                      {`{{ ${v} }}`}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              <div
+                className="prose prose-sm max-w-none rounded-lg border bg-muted/30 p-4 dark:prose-invert"
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: previewing.body_html }}
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

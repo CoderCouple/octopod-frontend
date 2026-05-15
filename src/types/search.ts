@@ -19,6 +19,8 @@ export interface SearchRequest {
 }
 
 export interface DeveloperProfile {
+  id: string;
+  developer_profile_id: string;
   display_name: string | null;
   bio: string | null;
   headline: string | null;

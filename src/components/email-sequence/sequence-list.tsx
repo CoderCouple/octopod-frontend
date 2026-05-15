@@ -1,9 +1,36 @@
 "use client";
 
-import { Mail, MoreHorizontal, Send, Users } from "lucide-react";
+import { useState } from "react";
 
+import {
+  Ban,
+  Loader2,
+  Mail,
+  MoreHorizontal,
+  Pause,
+  Play,
+  Send,
+  Trash2,
+  Users,
+} from "lucide-react";
+import { toast } from "sonner";
+
+import {
+  cancelCampaign,
+  deleteCampaign,
+  pauseCampaign,
+  resumeCampaign,
+  startCampaign,
+} from "@/api/email-sequence";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { CampaignStatus, EmailCampaign } from "@/types/email-sequence";
 
 function StatusBadge({ status }: { status: CampaignStatus }) {
@@ -44,10 +71,37 @@ function formatDate(dateStr: string) {
 export function SequenceList({
   campaigns,
   onSelect,
+  onChanged,
 }: {
   campaigns: EmailCampaign[];
   onSelect: (campaign: EmailCampaign) => void;
+  onChanged?: () => void;
 }) {
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  async function runAction(
+    campaignId: string,
+    action: "start" | "pause" | "resume" | "cancel" | "delete",
+    label: string,
+  ) {
+    setBusyId(campaignId);
+    try {
+      if (action === "start") await startCampaign(campaignId);
+      else if (action === "pause") await pauseCampaign(campaignId);
+      else if (action === "resume") await resumeCampaign(campaignId);
+      else if (action === "cancel") await cancelCampaign(campaignId);
+      else await deleteCampaign(campaignId);
+      toast.success(`Campaign ${label}`);
+      onChanged?.();
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : `Failed to ${action} campaign`
+      );
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   if (campaigns.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
@@ -102,14 +156,71 @@ export function SequenceList({
             <span className="text-xs text-muted-foreground">
               {formatDate(campaign.created_at)}
             </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-7 opacity-0 group-hover:opacity-100"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <MoreHorizontal className="size-4" />
-            </Button>
+            <div onClick={(e) => e.stopPropagation()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 opacity-0 group-hover:opacity-100"
+                    disabled={busyId === campaign.id}
+                  >
+                    {busyId === campaign.id ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <MoreHorizontal className="size-4" />
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44">
+                  {(campaign.status === "draft" ||
+                    campaign.status === "paused") && (
+                    <DropdownMenuItem
+                      onClick={() =>
+                        runAction(
+                          campaign.id,
+                          campaign.status === "draft" ? "start" : "resume",
+                          campaign.status === "draft" ? "started" : "resumed",
+                        )
+                      }
+                    >
+                      <Play className="mr-2 size-3.5 text-green-600" />
+                      {campaign.status === "draft" ? "Start" : "Resume"}
+                    </DropdownMenuItem>
+                  )}
+                  {campaign.status === "active" && (
+                    <DropdownMenuItem
+                      onClick={() => runAction(campaign.id, "pause", "paused")}
+                    >
+                      <Pause className="mr-2 size-3.5 text-amber-600" />
+                      Pause
+                    </DropdownMenuItem>
+                  )}
+                  {(campaign.status === "active" ||
+                    campaign.status === "paused" ||
+                    campaign.status === "draft") && (
+                    <DropdownMenuItem
+                      onClick={() =>
+                        runAction(campaign.id, "cancel", "cancelled")
+                      }
+                    >
+                      <Ban className="mr-2 size-3.5 text-red-600" />
+                      Cancel
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() =>
+                      runAction(campaign.id, "delete", "deleted")
+                    }
+                    className="text-red-600 focus:text-red-700"
+                  >
+                    <Trash2 className="mr-2 size-3.5" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
       ))}

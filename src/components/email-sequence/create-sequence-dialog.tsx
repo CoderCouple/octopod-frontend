@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
   connectGmail,
   connectOutlook,
+  connectSes,
   connectSmtp,
   updateMailbox,
 } from "@/api/email-sequence";
@@ -68,6 +69,11 @@ export function CreateSequenceDialog({
         mb = await connectGmail({ auth_code: "" });
       } else if (provider === "outlook") {
         mb = await connectOutlook({ auth_code: "" });
+      } else if (provider === "ses") {
+        mb = await connectSes({
+          email_address: "",
+          display_name: null,
+        });
       } else {
         mb = await connectSmtp({
           smtp_host: "",
@@ -203,8 +209,12 @@ export function CreateSequenceDialog({
           )}
           {wizardStep === "editor" && (
             <SequenceEditor
+              mailboxId={mailbox?.id ?? null}
               mailboxEmail={mailbox?.email_address ?? null}
-              onSave={onCreated}
+              onSave={() => {
+                onCreated();
+                handleClose();
+              }}
               onCancel={handleClose}
             />
           )}

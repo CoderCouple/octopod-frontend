@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Loader2, Settings } from "lucide-react";
 import { toast } from "sonner";
 
+import { addCampaignStep, createCampaign } from "@/api/email-sequence";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { CampaignStep } from "@/types/email-sequence";
@@ -32,12 +33,14 @@ function makeDefaultStep(order: number): CampaignStep {
 }
 
 export function SequenceEditor({
+  mailboxId,
   mailboxEmail,
   onSave,
   onCancel,
 }: {
+  mailboxId: string | null;
   mailboxEmail: string | null;
-  onSave: () => void;
+  onSave: (campaignId: string) => void;
   onCancel: () => void;
 }) {
   const [sequenceName, setSequenceName] = useState("Untitled Sequence");
@@ -75,15 +78,59 @@ export function SequenceEditor({
   }
 
   async function handleSave() {
+    if (!mailboxId) {
+      toast.error("Connect a mailbox before saving the sequence");
+      return;
+    }
+    if (!sequenceName.trim()) {
+      toast.error("Sequence name is required");
+      return;
+    }
+
     setSaving(true);
     try {
-      // API call would go here (createCampaign + addCampaignStep for each step)
-      await new Promise((r) => setTimeout(r, 500));
+      // 1. Create the campaign (status: draft)
+      const campaign = await createCampaign({
+        name: sequenceName.trim(),
+        mailbox_id: mailboxId,
+        track_opens: true,
+        track_clicks: true,
+        stop_on_reply: true,
+      });
+
+      // 2. Persist each step in order. Don't fail the whole save if one
+      //    step errors — surface the count and let the user retry.
+      let stepsSaved = 0;
+      for (const step of steps) {
+        try {
+          await addCampaignStep(campaign.id, {
+            template_id: step.template_id ?? null,
+            step_type: step.step_type,
+            delay_days: step.delay_days,
+            delay_hours: step.delay_hours,
+            subject_override: step.subject_override || null,
+            body_override: step.body_override || null,
+            condition_field: step.condition_field,
+            condition_op: step.condition_op,
+            condition_value: step.condition_value,
+          });
+          stepsSaved += 1;
+        } catch (err) {
+          console.error("Failed to save step", step.step_order, err);
+        }
+      }
+
       setDirty(false);
-      toast.success("Campaign saved");
-      onSave();
-    } catch {
-      toast.error("Failed to save campaign");
+      if (stepsSaved === steps.length) {
+        toast.success(`Campaign saved (${stepsSaved} step${stepsSaved !== 1 ? "s" : ""})`);
+      } else {
+        toast.warning(
+          `Campaign created but only ${stepsSaved}/${steps.length} steps saved`
+        );
+      }
+      onSave(campaign.id);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save campaign");
     } finally {
       setSaving(false);
     }

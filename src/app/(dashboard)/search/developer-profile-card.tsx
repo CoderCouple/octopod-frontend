@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import {
   ExternalLink,
   GitFork,
@@ -10,6 +12,7 @@ import {
   Users,
 } from "lucide-react";
 
+import { AddToCampaignDialog } from "@/components/email-sequence/add-to-campaign-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,6 +43,7 @@ function RankingBar({ label, value }: { label: string; value: number }) {
 export function DeveloperProfileCard({ result }: { result: SearchResult }) {
   const { profile, score, ranking } = result;
   const { label, className } = scoreLabel(score);
+  const [addOpen, setAddOpen] = useState(false);
 
   const hasHfStats =
     profile.total_hf_models > 0 ||
@@ -257,7 +261,11 @@ export function DeveloperProfileCard({ result }: { result: SearchResult }) {
 
             {/* Add to Sequence button */}
             <div className="mt-4 flex justify-end">
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setAddOpen(true)}
+              >
                 <Plus className="mr-1.5 size-3.5" />
                 Add to Sequence
               </Button>
@@ -265,6 +273,13 @@ export function DeveloperProfileCard({ result }: { result: SearchResult }) {
           </div>
         </div>
       </CardContent>
+
+      <AddToCampaignDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        profileIds={[profile.developer_profile_id]}
+        profileName={profile.display_name}
+      />
     </Card>
   );
 }

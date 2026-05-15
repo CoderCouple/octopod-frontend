@@ -6,6 +6,7 @@ import { Loader2, Mail, Plus, Send, Users } from "lucide-react";
 import { toast } from "sonner";
 
 import { listCampaigns } from "@/api/email-sequence";
+import { CampaignDetailSheet } from "@/components/email-sequence/campaign-detail-sheet";
 import { CreateSequenceDialog } from "@/components/email-sequence/create-sequence-dialog";
 import { SequenceList } from "@/components/email-sequence/sequence-list";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ export default function EmailSequencePage() {
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [wizardOpen, setWizardOpen] = useState(false);
-  const [, setSelectedCampaign] = useState<EmailCampaign | null>(null);
+  const [selectedCampaign, setSelectedCampaign] = useState<EmailCampaign | null>(null);
 
   const fetchCampaigns = useCallback(async () => {
     try {
@@ -175,6 +176,7 @@ export default function EmailSequencePage() {
           <SequenceList
             campaigns={campaigns}
             onSelect={(c) => setSelectedCampaign(c)}
+            onChanged={fetchCampaigns}
           />
         </CardContent>
       </Card>
@@ -184,6 +186,18 @@ export default function EmailSequencePage() {
         open={wizardOpen}
         onOpenChange={setWizardOpen}
         onCreated={handleCampaignCreated}
+      />
+
+      {/* Campaign Detail Sheet — recipients + analytics */}
+      <CampaignDetailSheet
+        campaign={selectedCampaign}
+        open={selectedCampaign !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedCampaign(null);
+            fetchCampaigns();
+          }
+        }}
       />
     </div>
   );

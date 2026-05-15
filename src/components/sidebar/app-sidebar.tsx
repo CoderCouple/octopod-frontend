@@ -45,6 +45,7 @@ const navMain = [
     items: [
       { title: "Campaigns", url: "/email-sequence" },
       { title: "Templates", url: "/email-sequence/templates" },
+      { title: "Mailboxes", url: "/email-sequence/mailboxes" },
     ],
   },
   {

@@ -342,8 +342,9 @@ export function getEnrichmentResult(profileId: string) {
 }
 
 export function enrichEmailBatch(profileIds: string[]) {
+  // Backend expects a raw JSON array (FastAPI list[str]), not a wrapper
   return request<EmailEnrichmentResult[]>("/email-enrichment/batch", {
     method: "POST",
-    body: JSON.stringify({ profile_ids: profileIds }),
+    body: JSON.stringify(profileIds),
   });
 }
