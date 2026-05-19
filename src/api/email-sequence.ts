@@ -64,6 +64,21 @@ export function connectOutlook(params: ConnectOutlookParams) {
   });
 }
 
+export interface OAuthUrlResponse {
+  oauth_url: string;
+  redirect_uri: string;
+}
+
+export function getGmailOauthUrl(returnTo?: string) {
+  const qs = returnTo ? `?return_to=${encodeURIComponent(returnTo)}` : "";
+  return request<OAuthUrlResponse>(`/mailbox/gmail/oauth-url${qs}`);
+}
+
+export function getOutlookOauthUrl(returnTo?: string) {
+  const qs = returnTo ? `?return_to=${encodeURIComponent(returnTo)}` : "";
+  return request<OAuthUrlResponse>(`/mailbox/outlook/oauth-url${qs}`);
+}
+
 export function connectSmtp(params: ConnectSmtpParams) {
   return request<Mailbox>("/mailbox/smtp/connect", {
     method: "POST",

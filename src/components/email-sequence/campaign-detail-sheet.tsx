@@ -145,7 +145,7 @@ export function CampaignDetailSheet({
     setAnalyticsLoading(true);
     try {
       const [page, stats] = await Promise.all([
-        listRecipients(campaign.id, { limit: 200 }),
+        listRecipients(campaign.id, { limit: 100 }),
         getCampaignAnalytics(campaign.id).catch(() => null),
       ]);
       setRecipients(page.items);

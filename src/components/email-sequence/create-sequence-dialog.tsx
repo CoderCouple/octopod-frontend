@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import {
   connectGmail,
   connectOutlook,
-  connectSes,
-  connectSmtp,
   updateMailbox,
 } from "@/api/email-sequence";
 import { Button } from "@/components/ui/button";
@@ -32,9 +30,13 @@ import {
 import { ConnectMailbox } from "./steps/connect-mailbox";
 import { MailboxConnected } from "./steps/mailbox-connected";
 import { MailboxSettings } from "./steps/mailbox-settings";
+import { SesCredentials } from "./steps/ses-credentials";
+import { SmtpCredentials } from "./steps/smtp-credentials";
 
 type WizardStep =
   | "connect-mailbox"
+  | "smtp-credentials"
+  | "ses-credentials"
   | "mailbox-connected"
   | "mailbox-settings"
   | "choose-template"
@@ -62,55 +64,30 @@ export function CreateSequenceDialog({
     reset();
   }
 
-  async function handleConnect(provider: MailboxProvider) {
-    try {
-      let mb: Mailbox;
-      if (provider === "gmail") {
-        mb = await connectGmail({ auth_code: "" });
-      } else if (provider === "outlook") {
-        mb = await connectOutlook({ auth_code: "" });
-      } else if (provider === "ses") {
-        mb = await connectSes({
-          email_address: "",
-          display_name: null,
-        });
-      } else {
-        mb = await connectSmtp({
-          smtp_host: "",
-          smtp_port: 587,
-          smtp_username: "",
-          smtp_password: "",
-          smtp_use_tls: true,
-          email_address: "",
-        });
-      }
-      setMailbox(mb);
-      setWizardStep("mailbox-connected");
-    } catch {
-      // Simulate a connected mailbox for UI preview
-      const simulated: Mailbox = {
-        id: "mbx_preview",
-        owner_id: "",
-        provider,
-        email_address: `user@${provider === "gmail" ? "gmail.com" : provider === "outlook" ? "outlook.com" : "mail.com"}`,
-        display_name: null,
-        status: "connected",
-        daily_send_limit: 50,
-        sends_today: 0,
-        warmup_enabled: false,
-        warmup_current_limit: 5,
-        error_message: null,
-        last_error_at: null,
-        metadata: {},
-        is_deleted: false,
-        created_by: null,
-        updated_by: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      setMailbox(simulated);
-      setWizardStep("mailbox-connected");
+  function handleConnect(provider: MailboxProvider) {
+    if (provider === "smtp") {
+      setWizardStep("smtp-credentials");
+      return;
     }
+    if (provider === "ses") {
+      setWizardStep("ses-credentials");
+      return;
+    }
+    // Gmail / Outlook OAuth not yet wired to a real flow.
+    // Backend endpoints exist but need OAuth redirect orchestration.
+    toast.info(
+      `${provider === "gmail" ? "Gmail" : "Outlook"} OAuth is coming soon — use SMTP for now`
+    );
+  }
+
+  // Used by Gmail/Outlook callback once we wire OAuth (kept around so the
+  // import isn't dead code; will be called from /oauth-callback page).
+  void connectGmail;
+  void connectOutlook;
+
+  function handleConnected(mb: Mailbox) {
+    setMailbox(mb);
+    setWizardStep("mailbox-connected");
   }
 
   async function handleSaveSettings(settings: UpdateMailboxParams) {
@@ -140,8 +117,15 @@ export function CreateSequenceDialog({
 
   function handleBack() {
     switch (wizardStep) {
-      case "mailbox-connected":
+      case "smtp-credentials":
+      case "ses-credentials":
         setWizardStep("connect-mailbox");
+        break;
+      case "mailbox-connected":
+        // Go back to whichever entry path got us here
+        if (mailbox?.provider === "smtp") setWizardStep("smtp-credentials");
+        else if (mailbox?.provider === "ses") setWizardStep("ses-credentials");
+        else setWizardStep("connect-mailbox");
         break;
       case "mailbox-settings":
         setWizardStep("mailbox-connected");
@@ -194,6 +178,12 @@ export function CreateSequenceDialog({
               onConnect={handleConnect}
               onSkip={() => setWizardStep("choose-template")}
             />
+          )}
+          {wizardStep === "smtp-credentials" && (
+            <SmtpCredentials onConnected={handleConnected} />
+          )}
+          {wizardStep === "ses-credentials" && (
+            <SesCredentials onConnected={handleConnected} />
           )}
           {wizardStep === "mailbox-connected" && mailbox && (
             <MailboxConnected
